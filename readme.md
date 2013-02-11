@@ -7,4 +7,4 @@ We have a background:
 
 And some balls:
 
-![balls1](juggle1/000000002.jpg)
+![00000002](juggle1/00000002.jpg)
