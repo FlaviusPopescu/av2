@@ -3,6 +3,9 @@ function [outimage] = normalized_rgb(image)
     green = double(image(:, :, 2));
     blue = double(image(:, :, 3));
     sum = red + green + blue;
-    outimage = [red ./ sum, green ./ sum, blue ./ sum];
+    outimage = zeros(size(image));
+    outimage(:, :, 1) = red ./ sum;
+    outimage(:, :, 2) = green ./ sum;
+    outimage(:, :, 3) = blue ./ sum;
     
 end
