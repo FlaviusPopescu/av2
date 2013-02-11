@@ -1,10 +1,10 @@
 load gt1
 
-files = dir('0*.jpg');
+files = dir('juggle1/0*.jpg')
 
 figure(1);
 for ii = 1:size(files,1)
-    Image = imread(files(ii).name);
+    Image = imread(['juggle1/', files(ii).name]);
     imshow(Image);
     hold on;
     plot(gt1(3,ii),gt1(2,ii),'r.');
