@@ -12,11 +12,11 @@ function main
     for ii = 1:size(files,1)
         Image = imread(['juggle1/', files(ii).name]);
         diff = bgdiff(Image, avgbg);
-        thresh_yellow(diff);
-        thresh_blue(diff); 
+        imshow(thresh_yellow(diff) + thresh_blue(diff)); 
+        pause(1)
     end 
           
-
+    
     
     
     
