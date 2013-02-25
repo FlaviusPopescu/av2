@@ -5,9 +5,6 @@ function [res] = thresh_blue(m)
   h = mhsv(:,:,1);
   s = mhsv(:,:,2);
   v = mhsv(:,:,3);
-  
-  class(mhsv)
-  class(h)
               
   for i=1:size(mhsv,1)
       for j=1:size(mhsv,2)            
