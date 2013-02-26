@@ -26,17 +26,17 @@ function main(skip_detection)
 
             Y = thresh_yellow(diff);
             B = thresh_blue(diff);
-            % R = thresh_red(diff);
+            R = thresh_red(diff);
 
             cy = biggest_center(Y);
             cb = biggest_center(B);
-            cr =[0, 0];% biggest_center(R);
+            cr = biggest_center(R);
 
             tracks(ii, :) = [cy, cb, cr];
             set(fg, 'name', files(ii).name);
-            imshow(Y + B);
+            imshow(R + Y + B);
             hold on
-            plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*');
+            plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*', cr(1), cr(2), 'r*');
             drawnow;
             pause(1 - toc)
             perc = ii/(size(files,1) * 2 + 4);
@@ -49,7 +49,7 @@ function main(skip_detection)
     figure(1);
     imshow(imread('background.jpg'))
     hold on
-    plot(tracks(:, 1), tracks(:, 2), 'y', tracks(:, 3), tracks(:, 4), 'b')
+    plot(tracks(:, 1), tracks(:, 2), 'y', tracks(:, 3), tracks(:, 4), 'b', tracks(:, 5), tracks(:, 6), 'r')
     print('-dpng', 'report/tracking')
     
     figure(1);
@@ -95,5 +95,11 @@ function main(skip_detection)
         perc = (ii + size(files,1))/(size(files,1) * 2 + 4);
         waitbar(perc,wb,sprintf('%d%% completed...',round(perc * 100)));
     end 
+    
+    
+    % Cleanup
+    
+    close(fg);
+    close(wb);
     
 end
