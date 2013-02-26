@@ -2,7 +2,7 @@
 % ----------------------------------------
 % To calculate the average background we iterate through all the images and
 % simply average their numerical values.
-function [avgbg] = avgall
+function [avgbg] = avgall()
     files = dir('juggle1/0*.jpg');
     avgbg = zeros(size( imread('background.jpg')) , 'double' );
     for ii = 1:size(files,1)
