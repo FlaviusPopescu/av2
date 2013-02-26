@@ -17,3 +17,7 @@ We have a background:
 And some balls:
 
 ![00000002](juggle1/00000002.jpg)
+
+Current tracking
+
+![tracking](report/tracking.png)

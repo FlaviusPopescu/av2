@@ -3,11 +3,12 @@ function [res] = thresh_red(m)
   mhsv = rgb2hsv(m);  
    
   h = mhsv(:,:,1);
+
 %   s = mhsv(:,:,2);
 %   v = mhsv(:,:,3);
   
   
-  res = h < 0.16;
+%  res = h < 0.16;
   %[x, y] = find(h < 0.47 | h > 0.65)
   
   %m(x, y, :) = [255; 255; 255];
@@ -28,6 +29,5 @@ function [res] = thresh_red(m)
 
 
 
-
-
+  res = h > 0.9;
 end
