@@ -1,0 +1,11 @@
+<tr id="section-?index">
+<td class="docs">
+  <div class="pilwrap">
+    <a class="pilcrow" href="#section-?index">&#182;</a>
+  </div>
+  ?docs_html
+</td>
+<td class="code">
+  ?code_html
+</td>
+</tr>

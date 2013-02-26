@@ -9,6 +9,8 @@ Algorithms used
 
 TODO
 
+<%= render 'docs/main.html' %>
+
 Performance
 -----------
 

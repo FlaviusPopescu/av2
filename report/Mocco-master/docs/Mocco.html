@@ -1,0 +1,550 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <title>Mocco.m</title>
+
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+  <link rel="stylesheet" media="all" href="Mocco.css"/>
+
+</head>
+
+<body>
+
+  <div id="container">
+
+    <div id="background"></div>
+
+    
+<div id="jump_to">
+
+  Jump To \\&hellip;
+
+  <div id="jump_wrapper">
+
+  <div id="jump_page">
+<a class="source" href="C:\Users\Mathematik\Git\Mocco\docs\Mocco.html">Mocco.m</a>
+</div>
+
+  </div>
+
+</div>
+
+    <table cellpadding="0" cellspacing="0">
+
+      <thead>
+
+        <tr>
+
+          <th class="docs">
+
+            <h1>
+
+              Mocco.m
+
+            </h1>
+
+          </th>
+
+          <th class="code">
+
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+<tr id="section-1">
+
+<td class="docs">
+
+  <div class="pilwrap">
+
+    <a class="pilcrow" href="#section-1">&#182;</a>
+
+  </div>
+
+  <p>Mocco is a quick-and-dirty, literate-programming-style documentation 
+generator. It is a Matlab port of <a href="http://jashkenas.github.com/docco/">Docco</a>,
+which was written by <a href="https://github.com/jashkenas">Jeremy Ashkenas</a> in
+in Coffescript and runs on node.js.</p>
+
+<p>Mocco produces HTML that displays your comments alongside your code. 
+Comments are passed through <a href="http://daringfireball.net/projects/markdown/syntax">MarkdownJ</a>, 
+and code is highlighted using Python's syntax highlighting tool 
+<a href="http://pygments.org/">Pygments</a> This page is the result of running Mocco 
+against its own source files.</p>
+
+<p>To run Mocco, you'll have to have installed Python and Pygments. 
+It also depends on <a href="http://markdownj.org/">MarkdownJ</a> the Java port to
+Markdown.</p>
+
+<p>This version of Mocco only works for Matlab files.</p>
+
+<p>To use Mocco, run it from Matlab:</p>
+
+<p>  Mocco('some directory')</p>
+
+<p>...will generate linked HTML documentation for the named source files, 
+saving it into a <code>docs</code> folder.</p>
+
+<p>The source for Nocco is available on GitHub, and released under the MIT license.</p>
+
+<p>If <strong>Matlab</strong> isn't your cup of tea, or you'd prefer a more convenient
+package, get <a href="http://rtomayko.github.com/rocco/">Rocco</a>, the <strong>Ruby</strong> port that's
+available as a gem. If you're writing shell scripts, try
+<a href="http://rtomayko.github.com/shocco/">Shocco</a>, a port for the <strong>POSIX shell</strong>.
+Both are by <a href="http://github.com/rtomayko">Ryan Tomayko</a>. If <strong>Python</strong>'s more
+your speed, take a look at <a href="http://github.com/fitzgen">Nick Fitzgerald</a>'s
+<a href="http://fitzgen.github.com/pycco/">Pycco</a>.</p>
+
+<h3>Main Document Generation Functions</h3>
+
+
+</td>
+
+<td class="code">
+
+  
+<div class="highlight"><pre><div class="highlight"><pre><span class="k">function</span><span class="w"> </span><span class="nf">Mocco</span><span class="p">(</span>targetFolder<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">set</span><span class="p">(</span>0<span class="p">,</span><span class="s">&#39;RecursionLimit&#39;</span><span class="p">,</span> 5000<span class="p">)</span>  
+    <span class="n">moccoLocation</span> <span class="p">=</span> <span class="n">mfilename</span><span class="p">(</span><span class="s">&#39;fullpath&#39;</span><span class="p">);</span> 
+    <span class="n">moccoLocation</span> <span class="p">=</span> <span class="n">moccoLocation</span><span class="p">(</span>1<span class="p">:</span><span class="k">end</span><span class="o">-</span>5<span class="p">);</span> 
+     
+    <span class="n">javaaddpath</span><span class="p">([</span><span class="n">moccoLocation</span> <span class="s">&#39;Resourcemarkdownj-1.0.2b4-0.3.0.jar&#39;</span><span class="p">]);</span> 
+    <span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">petebevin</span><span class="p">.</span><span class="n">markdown</span><span class="p">.</span><span class="n">MarkdownProcessor</span><span class="o">.*</span><span class="p">;</span> 
+     
+    <span class="k">global</span> <span class="n">HTML_TEXT</span> 
+    <span class="k">global</span> <span class="n">MOCCO_DIR</span> 
+    <span class="k">global</span> <span class="n">TARGET_DIR</span> 
+    <span class="k">global</span> <span class="n">JUMP_HTML</span> 
+    <span class="n">MOCCO_DIR</span>  <span class="p">=</span> <span class="n">moccoLocation</span><span class="p">;</span> 
+    <span class="n">TARGET_DIR</span> <span class="p">=</span> <span class="n">targetFolder</span><span class="p">;</span> 
+    <span class="n">HTML_TEXT</span>  <span class="p">=</span> <span class="n">GetHTMLFiles</span><span class="p">();</span> 
+     
+    <span class="k">if</span><span class="p">(</span><span class="nb">size</span><span class="p">(</span><span class="n">targetFolder</span><span class="p">)</span> <span class="o">&gt;</span> 0<span class="p">)</span> 
+        <span class="n">cd</span><span class="p">(</span><span class="n">targetFolder</span><span class="p">);</span> 
+        <span class="k">if</span> <span class="o">~</span><span class="n">isdir</span><span class="p">(</span><span class="s">&#39;docs&#39;</span><span class="p">);</span> <span class="n">mkdir</span><span class="p">(</span><span class="s">&#39;docs&#39;</span><span class="p">);</span> <span class="k">end</span><span class="p">;</span> 
+        <span class="n">cd</span><span class="p">(</span><span class="s">&#39;docs&#39;</span><span class="p">);</span> 
+        <span class="n">copyfile</span><span class="p">([</span><span class="n">GetResourceFolder</span><span class="p">()</span> <span class="s">&#39;*&#39;</span><span class="p">],</span> <span class="n">pwd</span><span class="p">,</span> <span class="s">&#39;f&#39;</span><span class="p">);</span> 
+    <span class="k">end</span> 
+         
+    <span class="n">files</span>     <span class="p">=</span> <span class="n">GetMFiles</span><span class="p">(</span><span class="n">targetFolder</span><span class="p">);</span> 
+    <span class="n">JUMP_HTML</span> <span class="p">=</span> <span class="n">GenerateJump</span><span class="p">(</span><span class="n">files</span><span class="p">);</span> 
+     
+    <span class="n">cellfun</span><span class="p">(@</span><span class="n">GenerateDocumentation</span><span class="p">,</span> <span class="n">files</span><span class="p">);</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span><span class="nf">GenerateDocumentation</span><span class="p">(</span>file<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">tokens</span>   <span class="p">=</span> <span class="n">Parse</span><span class="p">(</span><span class="n">file</span><span class="p">);</span> 
+    <span class="n">sections</span> <span class="p">=</span> <span class="n">Highlight</span><span class="p">(</span><span class="n">tokens</span><span class="p">);</span> 
+    <span class="n">GenerateHTML</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sections</span><span class="p">);</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>tokens <span class="p">=</span><span class="w"> </span><span class="nf">Parse</span><span class="p">(</span>file<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">lines</span>    <span class="p">=</span> <span class="n">GetLines</span><span class="p">(</span><span class="n">file</span><span class="p">);</span> 
+    <span class="n">tokens</span>   <span class="p">=</span> <span class="p">{</span> <span class="p">};</span> 
+    <span class="n">token</span>    <span class="p">=</span> <span class="p">@(</span><span class="n">docs</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span> <span class="n">struct</span><span class="p">(</span><span class="s">&#39;DocsText&#39;</span><span class="p">,</span> <span class="n">docs</span><span class="p">,</span> <span class="s">&#39;CodeText&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">);</span> 
+    <span class="n">language</span> <span class="p">=</span> <span class="n">GetLanguage</span><span class="p">(</span><span class="n">GetCommentSymbol</span><span class="p">());</span> 
+    <span class="n">hasCode</span>  <span class="p">=</span> 0<span class="p">;</span> 
+    <span class="n">docsText</span> <span class="p">=</span> <span class="p">[];</span> 
+    <span class="n">codeText</span> <span class="p">=</span> <span class="p">[];</span> 
+     
+    <span class="k">for</span> <span class="n">lineIdx</span> <span class="p">=</span> 1<span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> 
+        <span class="n">line</span> <span class="p">=</span> <span class="n">lines</span><span class="p">{</span><span class="n">lineIdx</span><span class="p">};</span> 
+        <span class="k">if</span><span class="p">(</span><span class="o">~</span><span class="nb">isempty</span><span class="p">(</span><span class="n">regexp</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">language</span><span class="p">.</span><span class="n">commentMatcher</span><span class="p">,</span> <span class="s">&#39;once&#39;</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="nb">isempty</span><span class="p">(</span><span class="n">regexp</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">language</span><span class="p">.</span><span class="n">commentFilter</span><span class="p">,</span> <span class="s">&#39;once&#39;</span><span class="p">)))</span> 
+            <span class="k">if</span><span class="p">(</span><span class="n">hasCode</span><span class="p">)</span> 
+                <span class="n">tokens</span>   <span class="p">=</span> <span class="nb">cat</span><span class="p">(</span>1<span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">token</span><span class="p">(</span><span class="n">docsText</span><span class="p">,</span> <span class="n">codeText</span><span class="p">));</span> 
+                <span class="n">hasCode</span>  <span class="p">=</span> 0<span class="p">;</span> 
+                <span class="n">docsText</span> <span class="p">=</span> <span class="p">[];</span> 
+                <span class="n">codeText</span> <span class="p">=</span> <span class="p">[];</span> 
+            <span class="k">end</span> 
+            <span class="n">docsText</span> <span class="p">=</span> <span class="p">[</span><span class="n">docsText</span> <span class="n">regexprep</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">language</span><span class="p">.</span><span class="n">commentMatcher</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)];</span> 
+        <span class="k">else</span> 
+            <span class="n">hasCode</span>  <span class="p">=</span> 1<span class="p">;</span> 
+            <span class="n">codeText</span> <span class="p">=</span> <span class="n">char</span><span class="p">([</span><span class="n">codeText</span><span class="p">,</span> <span class="n">line</span><span class="p">]);</span> 
+        <span class="k">end</span> 
+    <span class="k">end</span> 
+    <span class="n">tokens</span> <span class="p">=</span> <span class="nb">cat</span><span class="p">(</span>1<span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">token</span><span class="p">(</span><span class="n">docsText</span><span class="p">,</span> <span class="n">codeText</span><span class="p">));</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>sections <span class="p">=</span><span class="w"> </span><span class="nf">Highlight</span><span class="p">(</span>tokens<span class="p">)</span><span class="w"></span> 
+ 
+</pre></div>
+
+</td>
+
+</tr>
+<tr id="section-2">
+
+<td class="docs">
+
+  <div class="pilwrap">
+
+    <a class="pilcrow" href="#section-2">&#182;</a>
+
+  </div>
+
+  <p>This function process the code segment of a section in Pygment and the
+doc segment of a section in markdown. It calls Pygment from Python
+directly and uses the markdownj, a java port of markdown.</p>
+
+
+</td>
+
+<td class="code">
+
+  
+<div class="highlight"><pre> 
+    <span class="k">global</span> <span class="n">HTML_TEXT</span> 
+     
+    <span class="n">m</span> <span class="p">=</span> <span class="n">com</span><span class="p">.</span><span class="n">petebevin</span><span class="p">.</span><span class="n">markdown</span><span class="p">.</span><span class="n">MarkdownProcessor</span><span class="p">();</span> 
+     
+    <span class="n">language</span> <span class="p">=</span> <span class="n">GetLanguage</span><span class="p">(</span><span class="n">GetCommentSymbol</span><span class="p">());</span> 
+     
+ 
+</pre></div>
+
+</td>
+
+</tr>
+<tr id="section-3">
+
+<td class="docs">
+
+  <div class="pilwrap">
+
+    <a class="pilcrow" href="#section-3">&#182;</a>
+
+  </div>
+
+  <p>Create Pygmentize Codes</p>
+
+
+</td>
+
+<td class="code">
+
+  
+<div class="highlight"><pre> 
+    <span class="n">codeTexts</span> <span class="p">=</span> <span class="n">cellfun</span><span class="p">(@(</span><span class="n">token</span><span class="p">)</span> <span class="n">token</span><span class="p">.</span><span class="n">CodeText</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="s">&#39;UniformOutput&#39;</span><span class="p">,</span> 0<span class="p">);</span> 
+    <span class="n">codeTexts</span> <span class="p">=</span> <span class="n">foldl</span><span class="p">(@(</span><span class="n">code1</span><span class="p">,</span> <span class="n">code2</span><span class="p">)</span> <span class="p">[</span><span class="n">char</span><span class="p">(</span><span class="n">code1</span><span class="p">)</span> <span class="n">char</span><span class="p">(</span><span class="n">language</span><span class="p">.</span><span class="n">divider_text</span><span class="p">)</span> <span class="n">char</span><span class="p">(</span><span class="n">code2</span><span class="p">)],</span> <span class="n">hd</span><span class="p">(</span><span class="n">codeTexts</span><span class="p">),</span> <span class="n">tl</span><span class="p">(</span><span class="n">codeTexts</span><span class="p">));</span> 
+    <span class="n">codeHtmls</span> <span class="p">=</span> <span class="n">Pygmentize_Local</span><span class="p">(</span><span class="s">&#39;matlab&#39;</span><span class="p">,</span> <span class="n">codeTexts</span><span class="p">);</span> 
+    <span class="n">codeHtmls</span> <span class="p">=</span> <span class="n">strrep</span><span class="p">(</span><span class="n">strrep</span><span class="p">(</span><span class="n">codeHtmls</span><span class="p">,</span> <span class="n">HTML_TEXT</span><span class="p">.</span><span class="n">HighlightStart</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span> <span class="n">HTML_TEXT</span><span class="p">.</span><span class="n">HighlightEnd</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">);</span> 
+    <span class="n">codeHtmls</span> <span class="p">=</span> <span class="n">regexp</span><span class="p">(</span><span class="n">codeHtmls</span><span class="p">,</span> <span class="n">language</span><span class="p">.</span><span class="n">divider_html</span><span class="p">,</span> <span class="s">&#39;split&#39;</span><span class="p">);</span> 
+    <span class="n">codeHtmls</span> <span class="p">=</span> <span class="n">cellfun</span><span class="p">(@(</span><span class="n">codeHtml</span><span class="p">)</span> <span class="p">[</span><span class="n">char</span><span class="p">(</span><span class="n">HTML_TEXT</span><span class="p">.</span><span class="n">HighlightStart</span><span class="p">)</span> <span class="n">char</span><span class="p">(</span><span class="n">codeHtml</span><span class="p">)</span> <span class="n">char</span><span class="p">(</span><span class="n">HTML_TEXT</span><span class="p">.</span><span class="n">HighlightEnd</span><span class="p">)],</span> <span class="n">codeHtmls</span><span class="p">,</span> <span class="s">&#39;UniformOutput&#39;</span><span class="p">,</span> 0<span class="p">)</span><span class="o">&#39;</span><span class="p">;</span> 
+     
+ 
+</pre></div>
+
+</td>
+
+</tr>
+<tr id="section-4">
+
+<td class="docs">
+
+  <div class="pilwrap">
+
+    <a class="pilcrow" href="#section-4">&#182;</a>
+
+  </div>
+
+  <p>Create Markdown Documents</p>
+
+
+</td>
+
+<td class="code">
+
+  
+<div class="highlight"><pre> 
+    <span class="n">docsHtmls</span> <span class="p">=</span> <span class="n">cellfun</span><span class="p">(@(</span><span class="n">token</span><span class="p">)</span> <span class="n">char</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">char</span><span class="p">(</span><span class="n">token</span><span class="p">.</span><span class="n">DocsText</span><span class="p">))),</span> <span class="n">tokens</span><span class="p">,</span> <span class="s">&#39;UniformOutput&#39;</span><span class="p">,</span> 0<span class="p">);</span> 
+     
+ 
+</pre></div>
+
+</td>
+
+</tr>
+<tr id="section-5">
+
+<td class="docs">
+
+  <div class="pilwrap">
+
+    <a class="pilcrow" href="#section-5">&#182;</a>
+
+  </div>
+
+  <p>Create sections</p>
+
+
+</td>
+
+<td class="code">
+
+  
+<div class="highlight"><pre> 
+    <span class="n">sections</span> <span class="p">=</span> <span class="n">cellfun</span><span class="p">(@(</span><span class="n">code</span><span class="p">,</span> <span class="n">docs</span><span class="p">)</span> <span class="n">struct</span><span class="p">(</span><span class="s">&#39;DocsHtml&#39;</span><span class="p">,</span> <span class="n">docs</span><span class="p">,</span> <span class="s">&#39;CodeHtml&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">),</span> <span class="n">codeHtmls</span><span class="p">,</span> <span class="n">docsHtmls</span><span class="p">,</span> <span class="s">&#39;UniformOutput&#39;</span><span class="p">,</span> 0<span class="p">);</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span><span class="nf">GenerateHTML</span><span class="p">(</span>file, sections<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="k">global</span> <span class="n">HTML_TEXT</span> 
+    <span class="k">global</span> <span class="n">JUMP_HTML</span> 
+    <span class="k">if</span> <span class="o">~</span><span class="n">isdir</span><span class="p">(</span><span class="n">GetOutputDirectory</span><span class="p">())</span> 
+        <span class="n">error</span><span class="p">(</span><span class="s">&#39;Output Directory has not been created&#39;</span><span class="p">);</span> 
+    <span class="k">end</span> 
+ 
+    <span class="n">title</span> <span class="p">=</span> <span class="n">GetRelativeFileName</span><span class="p">(</span><span class="n">file</span><span class="p">);</span> 
+    <span class="n">dest</span>  <span class="p">=</span> <span class="n">GetOutputFile</span><span class="p">(</span><span class="n">file</span><span class="p">);</span> 
+ 
+    <span class="n">fid</span> <span class="p">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">);</span> 
+    <span class="n">fwrite</span><span class="p">(</span><span class="n">fid</span><span class="p">,</span> <span class="n">strrep</span><span class="p">(</span><span class="n">strrep</span><span class="p">(</span><span class="n">HTML_TEXT</span><span class="p">.</span><span class="n">Header</span><span class="p">,</span> <span class="s">&#39;?title&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">),</span> <span class="s">&#39;?jump&#39;</span><span class="p">,</span> <span class="n">JUMP_HTML</span><span class="p">));</span> 
+    <span class="k">for</span> <span class="n">idx</span> <span class="p">=</span> 1<span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span> 
+        <span class="n">T</span>  <span class="p">=</span> <span class="n">regexprep</span><span class="p">(</span><span class="n">HTML_TEXT</span><span class="p">.</span><span class="n">TableEntry</span><span class="p">,</span> <span class="s">&#39;?index&#39;</span><span class="p">,</span> <span class="n">int2str</span><span class="p">(</span><span class="n">idx</span><span class="p">));</span> 
+        <span class="n">T1</span> <span class="p">=</span> <span class="n">regexprep</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="s">&#39;?docs_html&#39;</span><span class="p">,</span>  <span class="n">sections</span><span class="p">{</span><span class="n">idx</span><span class="p">}.</span><span class="n">DocsHtml</span><span class="p">);</span> 
+        <span class="n">T2</span> <span class="p">=</span> <span class="n">regexprep</span><span class="p">(</span><span class="n">T1</span><span class="p">,</span><span class="s">&#39;?code_html&#39;</span><span class="p">,</span> <span class="n">sections</span><span class="p">{</span><span class="n">idx</span><span class="p">}.</span><span class="n">CodeHtml</span><span class="p">);</span> 
+        <span class="n">fwrite</span><span class="p">(</span><span class="n">fid</span><span class="p">,</span> <span class="n">T2</span><span class="p">);</span> 
+    <span class="k">end</span> 
+    <span class="n">fclose</span><span class="p">(</span><span class="n">fid</span><span class="p">);</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>str <span class="p">=</span><span class="w"> </span><span class="nf">GenerateJump</span><span class="p">(</span>files<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="k">global</span> <span class="n">HTML_TEXT</span> 
+    <span class="n">jumpEntry</span>   <span class="p">=</span> <span class="p">@(</span><span class="n">file</span><span class="p">)</span> <span class="n">regexprep</span><span class="p">(</span><span class="n">regexprep</span><span class="p">(</span><span class="n">HTML_TEXT</span><span class="p">.</span><span class="n">Jump</span><span class="p">,</span> <span class="s">&#39;?jump_html&#39;</span><span class="p">,</span> <span class="n">GetOutputFile</span><span class="p">(</span><span class="n">file</span><span class="p">)),</span> <span class="s">&#39;?jump_file&#39;</span><span class="p">,</span> <span class="n">GetRelativeFileName</span><span class="p">(</span><span class="n">file</span><span class="p">));</span> 
+    <span class="n">jumpEntries</span> <span class="p">=</span> <span class="n">cellfun</span><span class="p">(</span><span class="n">jumpEntry</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="s">&#39;UniformOutput&#39;</span><span class="p">,</span> 0<span class="p">);</span> 
+    <span class="n">jumpString</span>  <span class="p">=</span> <span class="n">foldr</span><span class="p">(@(</span><span class="n">jump1</span><span class="p">,</span> <span class="n">jump2</span><span class="p">)</span> <span class="p">[</span><span class="n">char</span><span class="p">(</span><span class="n">jump1</span><span class="p">)</span> <span class="n">char</span><span class="p">(</span><span class="n">jump2</span><span class="p">)],</span> <span class="n">hd</span><span class="p">(</span><span class="n">jumpEntries</span><span class="p">),</span> <span class="n">tl</span><span class="p">(</span><span class="n">jumpEntries</span><span class="p">));</span> 
+    <span class="n">str</span> <span class="p">=</span> <span class="p">[</span><span class="n">char</span><span class="p">(</span><span class="n">HTML_TEXT</span><span class="p">.</span><span class="n">JumpStart</span><span class="p">)</span> <span class="n">char</span><span class="p">(</span><span class="n">jumpString</span><span class="p">{</span>1<span class="p">})</span> <span class="n">char</span><span class="p">(</span><span class="n">HTML_TEXT</span><span class="p">.</span><span class="n">JumpEnd</span><span class="p">)];</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>comment <span class="p">=</span><span class="w"> </span><span class="nf">GetCommentSymbol</span><span class="p">()</span><span class="w"></span> 
+<span class="w">    </span><span class="n">comment</span> <span class="p">=</span> <span class="s">&#39;%&#39;</span><span class="p">;</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>section <span class="p">=</span><span class="w"> </span><span class="nf">GetSectionSymbol</span><span class="p">()</span><span class="w"></span> 
+<span class="w">    </span><span class="n">section</span> <span class="p">=</span> <span class="s">&#39;%%&#39;</span><span class="p">;</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>language <span class="p">=</span><span class="w"> </span><span class="nf">GetLanguage</span><span class="p">(</span>symbol<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">language</span><span class="p">.</span><span class="n">commentMatcher</span> <span class="p">=</span> <span class="p">[</span><span class="s">&#39;^s*&#39;</span> <span class="n">symbol</span> <span class="s">&#39;s?&#39;</span><span class="p">];</span> 
+    <span class="n">language</span><span class="p">.</span><span class="n">commentFilter</span>  <span class="p">=</span> <span class="s">&#39;(^#![/]|^s*#{)&#39;</span><span class="p">;</span> 
+    <span class="n">language</span><span class="p">.</span><span class="n">divider_text</span>   <span class="p">=</span> <span class="p">[</span><span class="n">char</span><span class="p">(</span>10<span class="p">)</span> <span class="n">symbol</span> <span class="s">&#39;DIVIDER&#39;</span> <span class="n">char</span><span class="p">(</span>10<span class="p">)];</span> 
+    <span class="n">language</span><span class="p">.</span><span class="n">divider_html</span>   <span class="p">=</span> <span class="p">[</span><span class="n">char</span><span class="p">(</span>10<span class="p">)</span> <span class="s">&#39;*&lt;span class=&quot;c[1]?&quot;&gt;&#39;</span> <span class="n">symbol</span> <span class="s">&#39;DIVIDER&lt;/span&gt;&#39;</span> <span class="n">char</span><span class="p">(</span>10<span class="p">)</span> <span class="s">&#39;*&#39;</span><span class="p">];</span> 
+<span class="k">end</span> 
+ 
+ 
+</pre></div>
+
+</td>
+
+</tr>
+<tr id="section-6">
+
+<td class="docs">
+
+  <div class="pilwrap">
+
+    <a class="pilcrow" href="#section-6">&#182;</a>
+
+  </div>
+
+  <h3>File and Foler IO Helpers</h3>
+
+
+</td>
+
+<td class="code">
+
+  
+<div class="highlight"><pre> 
+<span class="k">function</span><span class="w"> </span>resourceFolder <span class="p">=</span><span class="w"> </span><span class="nf">GetResourceFolder</span><span class="p">()</span><span class="w"></span> 
+<span class="w">    </span><span class="k">global</span> <span class="n">MOCCO_DIR</span> 
+    <span class="n">resourceFolder</span> <span class="p">=</span> <span class="p">[</span><span class="n">MOCCO_DIR</span> <span class="s">&#39;Resource&#39;</span><span class="p">];</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>htmlFolder <span class="p">=</span><span class="w"> </span><span class="nf">GetHTMLFolder</span><span class="p">()</span><span class="w"></span> 
+<span class="w">    </span><span class="k">global</span> <span class="n">MOCCO_DIR</span> 
+    <span class="n">htmlFolder</span> <span class="p">=</span> <span class="p">[</span><span class="n">MOCCO_DIR</span> <span class="s">&#39;ResourceHTML&#39;</span><span class="p">];</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>htmls <span class="p">=</span><span class="w"> </span><span class="nf">GetHTMLFiles</span><span class="p">()</span><span class="w"></span> 
+<span class="w">    </span><span class="n">r</span> <span class="p">=</span> <span class="n">dir</span><span class="p">(</span><span class="n">GetHTMLFolder</span><span class="p">());</span> 
+    <span class="k">for</span> <span class="nb">i</span> <span class="p">=</span> 1<span class="p">:</span><span class="nb">size</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> 1<span class="p">)</span> 
+        <span class="k">if</span><span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="n">r</span><span class="p">(</span><span class="nb">i</span><span class="p">).</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="n">strcmp</span><span class="p">(</span><span class="n">r</span><span class="p">(</span><span class="nb">i</span><span class="p">).</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;..&#39;</span><span class="p">));</span> <span class="k">continue</span><span class="p">;</span> <span class="k">end</span><span class="p">;</span> 
+        <span class="n">fieldName</span> <span class="p">=</span> <span class="n">r</span><span class="p">(</span><span class="nb">i</span><span class="p">).</span><span class="n">name</span><span class="p">;</span> 
+        <span class="n">fieldName</span> <span class="p">=</span> <span class="n">fieldName</span><span class="p">(</span>1<span class="p">:</span><span class="n">strfind</span><span class="p">(</span><span class="n">fieldName</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">)</span> <span class="o">-</span> 1<span class="p">);</span> 
+        <span class="n">htmls</span><span class="p">.(</span><span class="n">fieldName</span><span class="p">)</span> <span class="p">=</span> <span class="n">foldl</span><span class="p">(@(</span><span class="n">line1</span><span class="p">,</span> <span class="n">line2</span><span class="p">)</span> <span class="p">[</span><span class="n">char</span><span class="p">(</span><span class="n">line1</span><span class="p">)</span> <span class="n">char</span><span class="p">(</span>10<span class="p">)</span> <span class="n">char</span><span class="p">(</span><span class="n">line2</span><span class="p">)],</span> <span class="p">[],</span> <span class="n">GetLines</span><span class="p">([</span><span class="n">GetHTMLFolder</span><span class="p">()</span> <span class="n">r</span><span class="p">(</span><span class="nb">i</span><span class="p">).</span><span class="n">name</span><span class="p">]));</span> 
+    <span class="k">end</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>files <span class="p">=</span><span class="w"> </span><span class="nf">GetMFiles</span><span class="p">(</span>directory<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">files</span> <span class="p">=</span> <span class="p">{};</span> 
+    <span class="n">r</span> <span class="p">=</span> <span class="n">dir</span><span class="p">(</span><span class="n">directory</span><span class="p">);</span> 
+    <span class="k">for</span> <span class="nb">i</span> <span class="p">=</span> 1<span class="p">:</span><span class="nb">size</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> 1<span class="p">)</span> 
+        <span class="k">if</span> <span class="n">isdir</span><span class="p">(</span><span class="n">r</span><span class="p">(</span><span class="nb">i</span><span class="p">).</span><span class="n">name</span><span class="p">);</span> <span class="k">continue</span><span class="p">;</span> <span class="k">end</span><span class="p">;</span> 
+        <span class="k">if</span> <span class="o">~</span><span class="n">strcmp</span><span class="p">(</span><span class="n">r</span><span class="p">(</span><span class="nb">i</span><span class="p">).</span><span class="n">name</span><span class="p">(</span><span class="nb">length</span><span class="p">(</span><span class="n">r</span><span class="p">(</span><span class="nb">i</span><span class="p">).</span><span class="n">name</span><span class="p">)</span> <span class="o">-</span> 1<span class="p">:</span><span class="k">end</span><span class="p">),</span> <span class="s">&#39;.m&#39;</span><span class="p">);</span> <span class="k">continue</span><span class="p">;</span> <span class="k">end</span><span class="p">;</span> 
+        <span class="n">files</span> <span class="p">=</span> <span class="nb">cat</span><span class="p">(</span>1<span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="p">[</span><span class="n">directory</span> <span class="s">&#39;\&#39;</span> <span class="n">r</span><span class="p">(</span><span class="nb">i</span><span class="p">).</span><span class="n">name</span><span class="p">]);</span> 
+    <span class="k">end</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>fileName <span class="p">=</span><span class="w"> </span><span class="nf">GetRelativeFileName</span><span class="p">(</span>file<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="k">global</span> <span class="n">TARGET_DIR</span> 
+    <span class="n">fileName</span> <span class="p">=</span> <span class="n">strrep</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="p">[</span><span class="n">TARGET_DIR</span> <span class="s">&#39;\&#39;</span><span class="p">],</span> <span class="s">&#39;&#39;</span><span class="p">);</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>lines <span class="p">=</span><span class="w"> </span><span class="nf">GetLines</span><span class="p">(</span>file<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">fid</span> <span class="p">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">file</span><span class="p">);</span> 
+    <span class="n">lines</span> <span class="p">=</span> <span class="p">{};</span> 
+    <span class="n">nline</span> <span class="p">=</span> <span class="n">fgets</span><span class="p">(</span><span class="n">fid</span><span class="p">);</span> 
+    <span class="k">while</span> <span class="n">ischar</span><span class="p">(</span><span class="n">nline</span><span class="p">)</span> 
+        <span class="n">lines</span> <span class="p">=</span> <span class="nb">cat</span><span class="p">(</span>1<span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">nline</span><span class="p">);</span> 
+        <span class="n">nline</span> <span class="p">=</span> <span class="n">fgets</span><span class="p">(</span><span class="n">fid</span><span class="p">);</span> 
+    <span class="k">end</span> 
+    <span class="n">fclose</span><span class="p">(</span><span class="n">fid</span><span class="p">);</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>outputDir <span class="p">=</span><span class="w"> </span><span class="nf">GetOutputDirectory</span><span class="p">()</span><span class="w">   </span> 
+<span class="w">    </span><span class="k">global</span> <span class="n">TARGET_DIR</span> 
+    <span class="n">outputDir</span> <span class="p">=</span> <span class="p">[</span><span class="n">TARGET_DIR</span> <span class="s">&#39;\docs&#39;</span><span class="p">];</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>outputFileName <span class="p">=</span><span class="w"> </span><span class="nf">GetOutputFile</span><span class="p">(</span>file<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="k">global</span> <span class="n">TARGET_DIR</span> 
+    <span class="n">outputFileName</span> <span class="p">=</span> <span class="p">[</span><span class="n">strrep</span><span class="p">(</span><span class="n">file</span><span class="p">(</span>1<span class="p">:</span><span class="n">strfind</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">)</span><span class="o">-</span>1<span class="p">),</span> <span class="n">TARGET_DIR</span><span class="p">,</span> <span class="n">GetOutputDirectory</span><span class="p">())</span> <span class="s">&#39;.html&#39;</span><span class="p">];</span> 
+<span class="k">end</span> 
+ 
+ 
+</pre></div>
+
+</td>
+
+</tr>
+<tr id="section-7">
+
+<td class="docs">
+
+  <div class="pilwrap">
+
+    <a class="pilcrow" href="#section-7">&#182;</a>
+
+  </div>
+
+  <h3>Pygmentize Helpers.</h3>
+
+
+</td>
+
+<td class="code">
+
+  
+<div class="highlight"><pre> 
+<span class="k">function</span><span class="w"> </span>str <span class="p">=</span><span class="w"> </span><span class="nf">Pygmentize_Webservice</span><span class="p">(</span>lang, code<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">pygmentize_URL</span> <span class="p">=</span> <span class="s">&#39;http://pygments.appspot.com&#39;</span><span class="p">;</span> 
+    <span class="p">[</span><span class="n">str</span><span class="p">.</span> <span class="n">status</span><span class="p">]</span> <span class="p">=</span> <span class="n">urlread</span><span class="p">(</span><span class="n">pygmentize_URL</span><span class="p">,</span> <span class="s">&#39;post&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;code&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="s">&#39;lang&#39;</span><span class="p">,</span> <span class="n">lang</span><span class="p">});</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>str <span class="p">=</span><span class="w"> </span><span class="nf">Pygmentize_Local</span><span class="p">(</span>lang, code<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="k">function</span> <span class="n">file</span> <span class="p">=</span> <span class="n">GetTempFile</span><span class="p">()</span> 
+        <span class="n">file</span> <span class="p">=</span> <span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;%s_%s_%s.txt&#39;</span><span class="p">,</span> <span class="n">int2str</span><span class="p">(</span><span class="n">now</span><span class="p">),</span> <span class="n">int2str</span><span class="p">(</span><span class="nb">rem</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> 2<span class="p">)</span><span class="o">*</span>1000<span class="p">),</span> <span class="n">lang</span><span class="p">);</span> 
+        <span class="n">fid</span> <span class="p">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">);</span> 
+        <span class="n">fwrite</span><span class="p">(</span><span class="n">fid</span><span class="p">,</span> <span class="n">code</span><span class="p">);</span> 
+        <span class="n">fclose</span><span class="p">(</span><span class="n">fid</span><span class="p">);</span> 
+    <span class="k">end</span> 
+    <span class="n">tempFile</span> <span class="p">=</span> <span class="n">GetTempFile</span><span class="p">();</span> 
+    <span class="n">str</span> <span class="p">=</span> <span class="n">evalc</span><span class="p">([</span><span class="s">&#39;!PYGMENTIZE -l &#39;</span> <span class="n">lang</span> <span class="s">&#39; -O encoding=utf-8 -f html &#39;</span> <span class="n">tempFile</span><span class="p">]);</span> 
+    <span class="n">delete</span><span class="p">(</span><span class="n">tempFile</span><span class="p">);</span> 
+<span class="k">end</span> 
+ 
+ 
+</pre></div>
+
+</td>
+
+</tr>
+<tr id="section-8">
+
+<td class="docs">
+
+  <div class="pilwrap">
+
+    <a class="pilcrow" href="#section-8">&#182;</a>
+
+  </div>
+
+  <h3>Functional Programming Helpers</h3>
+
+
+</td>
+
+<td class="code">
+
+  
+<div class="highlight"><pre> 
+<span class="k">function</span><span class="w"> </span>handle <span class="p">=</span><span class="w"> </span><span class="nf">ifthenelse</span><span class="p">(</span>b, varargin<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">handle</span> <span class="p">=</span> <span class="n">varargin</span><span class="p">{</span>2<span class="o">-</span><span class="n">b</span><span class="p">}();</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>handle <span class="p">=</span><span class="w"> </span><span class="nf">Y</span><span class="p">(</span>f<span class="p">)</span><span class="w"></span> 
+ 
+</pre></div>
+
+</td>
+
+</tr>
+<tr id="section-9">
+
+<td class="docs">
+
+  <div class="pilwrap">
+
+    <a class="pilcrow" href="#section-9">&#182;</a>
+
+  </div>
+
+  <p>Y-Combinator</p>
+
+
+</td>
+
+<td class="code">
+
+  
+<div class="highlight"><pre> 
+    <span class="n">handle</span> <span class="p">=</span> <span class="n">feval</span><span class="p">(@(</span><span class="n">g</span><span class="p">)</span><span class="n">g</span><span class="p">(</span><span class="n">g</span><span class="p">),</span> <span class="p">@(</span><span class="n">h</span><span class="p">)</span><span class="n">f</span><span class="p">(@(</span><span class="n">varargin</span><span class="p">)</span> <span class="n">feval</span><span class="p">(</span><span class="n">h</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">varargin</span><span class="p">{:})));</span>  
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>head <span class="p">=</span><span class="w"> </span><span class="nf">hd</span><span class="p">(</span>xs<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">head</span> <span class="p">=</span> <span class="n">ifthenelse</span><span class="p">(</span><span class="nb">isempty</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="p">@()[],</span> <span class="p">@()</span><span class="n">xs</span><span class="p">(</span>1<span class="p">));</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>tail <span class="p">=</span><span class="w"> </span><span class="nf">tl</span><span class="p">(</span>xs<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">tail</span> <span class="p">=</span> <span class="n">ifthenelse</span><span class="p">(</span><span class="nb">length</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">&lt;</span><span class="p">=</span> 1<span class="p">,</span> <span class="p">@()[],</span> <span class="p">@()</span><span class="n">xs</span><span class="p">(</span>2<span class="p">:</span><span class="k">end</span><span class="p">));</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>folded <span class="p">=</span><span class="w"> </span><span class="nf">foldr</span><span class="p">(</span>fxn, xn,   xs<span class="p">)</span><span class="w"> </span> 
+<span class="w">    </span><span class="n">folded</span> <span class="p">=</span> <span class="n">feval</span><span class="p">(</span><span class="n">Y</span><span class="p">(@(</span><span class="n">fold</span><span class="p">)</span> <span class="p">@(</span><span class="n">xt</span><span class="p">)</span> <span class="n">ifthenelse</span><span class="p">(</span><span class="nb">isempty</span><span class="p">(</span><span class="n">xt</span><span class="p">),</span> <span class="p">@()</span> <span class="n">xn</span><span class="p">,</span> <span class="p">@()</span> <span class="n">fxn</span><span class="p">(</span><span class="n">hd</span><span class="p">(</span><span class="n">xt</span><span class="p">),</span> <span class="n">fold</span><span class="p">(</span><span class="n">tl</span><span class="p">(</span><span class="n">xt</span><span class="p">))))),</span> <span class="n">xs</span><span class="p">);</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>folded <span class="p">=</span><span class="w"> </span><span class="nf">foldl</span><span class="p">(</span>fxn, x0,   xs<span class="p">)</span><span class="w"> </span> 
+<span class="w">    </span><span class="n">folded</span> <span class="p">=</span> <span class="n">feval</span><span class="p">(</span><span class="n">Y</span><span class="p">(@(</span><span class="n">fold</span><span class="p">)</span> <span class="p">@(</span><span class="n">xp</span><span class="p">,</span> <span class="n">xt</span><span class="p">)</span> <span class="n">ifthenelse</span><span class="p">(</span><span class="nb">isempty</span><span class="p">(</span><span class="n">xt</span><span class="p">),</span> <span class="p">@()</span> <span class="n">xp</span><span class="p">,</span> <span class="p">@()</span> <span class="n">fold</span><span class="p">(</span><span class="n">fxn</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">hd</span><span class="p">(</span><span class="n">xt</span><span class="p">)),</span> <span class="n">tl</span><span class="p">(</span><span class="n">xt</span><span class="p">)))),</span> <span class="n">x0</span><span class="p">,</span> <span class="n">xs</span><span class="p">);</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>unfolded <span class="p">=</span><span class="w"> </span><span class="nf">unfold_x</span><span class="p">(</span>fxn, cond, x0<span class="p">)</span><span class="w"> </span> 
+<span class="w">    </span><span class="n">unfolded</span> <span class="p">=</span> <span class="n">feval</span><span class="p">(</span><span class="n">Y</span><span class="p">(@(</span><span class="n">unfold</span><span class="p">)</span> <span class="p">@(</span><span class="n">xt</span><span class="p">)</span>     <span class="n">ifthenelse</span><span class="p">(</span><span class="n">cond</span><span class="p">(</span><span class="n">xt</span><span class="p">),</span> <span class="p">@()</span> <span class="p">{</span><span class="n">xt</span><span class="p">},</span> <span class="p">@()</span> <span class="nb">cat</span><span class="p">(</span>1<span class="p">,</span> <span class="p">{</span><span class="n">xt</span><span class="p">},</span> <span class="n">unfold</span><span class="p">(</span><span class="n">fxn</span><span class="p">(</span><span class="n">xt</span><span class="p">))</span>     <span class="p">))),</span> <span class="n">x0</span>   <span class="p">);</span> 
+<span class="k">end</span> 
+ 
+<span class="k">function</span><span class="w"> </span>unfolded <span class="p">=</span><span class="w"> </span><span class="nf">unfold_n</span><span class="p">(</span>fxn, n,    x0<span class="p">)</span><span class="w"></span> 
+<span class="w">    </span><span class="n">unfolded</span> <span class="p">=</span> <span class="n">feval</span><span class="p">(</span><span class="n">Y</span><span class="p">(@(</span><span class="n">unfold</span><span class="p">)</span> <span class="p">@(</span><span class="n">xt</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>  <span class="n">ifthenelse</span><span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="n">n</span><span class="p">,</span>   <span class="p">@()</span> <span class="p">{</span>  <span class="p">},</span> <span class="p">@()</span> <span class="nb">cat</span><span class="p">(</span>1<span class="p">,</span> <span class="p">{</span><span class="n">xt</span><span class="p">},</span> <span class="n">unfold</span><span class="p">(</span><span class="n">fxn</span><span class="p">(</span><span class="n">xt</span><span class="p">),</span> <span class="n">k</span><span class="o">+</span>1<span class="p">)))),</span> <span class="n">x0</span><span class="p">,</span> 0<span class="p">);</span> 
+<span class="k">end</span>  
+
+</pre></div>
+
+</td>
+
+</tr>
