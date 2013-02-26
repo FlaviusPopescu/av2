@@ -30,7 +30,6 @@ function [res] = bgdiff(m, bg)
     % the images and use the result as a mask to further get rid of areas
     % with colours.
     res = uint8(res);          
-    n = bwmorph(im2bw(res,0.15), 'erode', 1);
-    
+    n = bwmorph(im2bw(res,0.15), 'erode', 1);    
     res = uint8(double(res) .* repmat(n, [1 1 3]));
 end

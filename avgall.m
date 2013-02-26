@@ -10,7 +10,6 @@ function [avgbg] = avgall()
         avgbg = avgbg + double(Image);    
     end 
 
-
     avgbg = uint8(  avgbg / size(files,1)  ); 
 end
 
