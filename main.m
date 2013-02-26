@@ -1,4 +1,4 @@
-function main
+function main(skip_detection)
     % This function should do the three required tasks from the assignment.
     % It can also be a place where sample usage of the stuff we created is 
     % shown, so that we know what the heck some of this stuff does.
@@ -13,25 +13,37 @@ function main
     files = dir('juggle1/0*.jpg');
     tracks = zeros(size(files,1), 6);
     
-    for ii = 1:size(files,1)
-        Image = imread(['juggle1/', files(ii).name]);
-        diff = bgdiff(Image, avgbg);
-        
-        Y = thresh_yellow(diff);
-        B = thresh_blue(diff);
-       
-        cy = biggest_center(Y);
-        cb = biggest_center(B);
-        
-        tracks(ii, :) = [cy, cb, [0, 0]];
-        
-        hold on
-        imshow(Y + B);
-        plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*');
-        drawnow;
-        %pause(1)
-    end 
+    wb = waitbar(0, 'Initializing');
     
+    if nargin == 1 && skip_detection
+        tracks = load('track.mat');
+        tracks = tracks.tracks;
+    else
+        for ii = 1:size(files,1)
+            tic;
+            Image = imread(['juggle1/', files(ii).name]);
+            diff = bgdiff(Image, avgbg);
+
+            Y = thresh_yellow(diff);
+            B = thresh_blue(diff);
+            % R = thresh_red(diff);
+
+            cy = biggest_center(Y);
+            cb = biggest_center(B);
+            cr =[0, 0];% biggest_center(R);
+
+            tracks(ii, :) = [cy, cb, cr];
+            set(fg, 'name', files(ii).name);
+            imshow(Y + B);
+            hold on
+            plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*');
+            drawnow;
+            pause(1 - toc)
+            perc = ii/(size(files,1) * 2 + 4);
+            waitbar(perc,wb,sprintf('%d%% completed...',round(perc * 100)));
+        end 
+        save('track.mat', 'tracks');
+    end
     
     % Task 2: Tracking
     figure(1);
