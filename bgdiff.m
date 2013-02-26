@@ -1,5 +1,3 @@
-% Background substraction
-% -----------------------
 % We start by defining threshold values for each colour channel.
 function [res] = bgdiff(m, bg)
     m = double(m);
