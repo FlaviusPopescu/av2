@@ -61,4 +61,27 @@ function main
        
     
     % Task 3: Evaluation
+    ev = load('gt1.mat');
+    gt = ev.gt1';
+    
+    yellow_correct = sum(sqrt(sum(gt(:,[7,6]) - tracks(:,[1,2]), 2) .^ 2) < 10)
+    blue_correct   = sum(sqrt(sum(gt(:,[5,4]) - tracks(:,[3,4]), 2) .^ 2) < 10)
+    red_correct    = sum(sqrt(sum(gt(:,[3,2]) - tracks(:,[5,6]), 2) .^ 2) < 10)
+    
+    overall = (yellow_correct + blue_correct + red_correct) / (size(tracks, 1) * 3)
+    
+    fg = figure(1);
+    for ii = 1:size(files,1)
+        tic;
+        Image = imread(['juggle1/', files(ii).name]);
+        set(fg, 'name', files(ii).name);
+        imshow(Image);
+        hold on
+        plot(tracks(ii, [1,3,5]), tracks(ii, [2,4,6]), 'k+', gt(ii, [7,5,3]), gt(ii, [6,4,2]), 'k*');
+        drawnow;
+        pause(1 - toc)
+        perc = (ii + size(files,1))/(size(files,1) * 2 + 4);
+        waitbar(perc,wb,sprintf('%d%% completed...',round(perc * 100)));
+    end 
+    
 end
