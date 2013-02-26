@@ -1,0 +1,30 @@
+
+
+
+
+
+Iteratively we grow the store variable with all the images we have seen.
+Store gets initiated to:
+    store = zeros(width, height, 3, 0);
+Then we apply this function with every image we see.
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{function}\PY{+w}{ }[store, bg] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{avg\PYZus{}adaptive}\PY{p}{(}store, curr\PY{p}{)}
+\PY{+w}{    }\PY{n}{store}\PY{p}{(}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{store}\PY{p}{,} 4\PY{p}{)} \PY{o}{+} 1\PY{p}{)} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{curr}\PY{p}{)}\PY{p}{;}
+    \PY{n}{bg} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{store}\PY{p}{,} 1\PY{p}{)}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{store}\PY{p}{,} 2\PY{p}{)}\PY{p}{,} 3\PY{p}{)}\PY{p}{;}
+    
+    \PY{k}{for} \PY{n+nb}{i} \PY{p}{=} 1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{store}\PY{p}{,} 4\PY{p}{)}
+       \PY{n}{bg} \PY{p}{=} \PY{n}{bg} \PY{o}{+} \PY{n}{double}\PY{p}{(}\PY{n}{store}\PY{p}{(}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{n+nb}{i}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+    \PY{k}{end}
+    \PY{n}{bg} \PY{p}{=} \PY{n}{uint8}\PY{p}{(}\PY{n+nb}{round}\PY{p}{(}\PY{n}{bg} \PY{o}{./} \PY{n+nb}{size}\PY{p}{(}\PY{n}{store}\PY{p}{,} 4\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+\PY{k}{end}
+
+\end{Verbatim}
+
+
+
+

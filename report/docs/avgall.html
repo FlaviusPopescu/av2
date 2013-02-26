@@ -1,16 +1,20 @@
 
-\section{avgall.m}
 
 
 
+
+Calculating the average background image
+----------------------------------------
+To calculate the average background we iterate through all the images and
+simply average their numerical values.
 
 
 
 
 
 \begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{function}\PY{err}{ }\PY{err}{[}\PY{err}{a}\PY{err}{v}\PY{err}{g}\PY{err}{b}\PY{err}{g}\PY{err}{]}\PY{err}{ }\PY{err}{=}\PY{err}{ }\PY{err}{a}\PY{err}{v}\PY{err}{g}\PY{err}{a}\PY{err}{l}\PY{err}{l}
-\PY{+w}{    }files \PY{p}{=}\PY{+w}{ }\PY{n+nf}{dir}\PY{p}{(}'juggle1/0*.jpg'\PY{p}{)}\PY{p}{;}
+\PY{k}{function}\PY{+w}{ }[avgbg] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{avgall}\PY{p}{(}\PY{p}{)}
+\PY{+w}{    }\PY{n}{files} \PY{p}{=} \PY{n}{dir}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{juggle1/0*.jpg'}\PY{p}{)}\PY{p}{;}
     \PY{n}{avgbg} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(} \PY{n}{imread}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{background.jpg'}\PY{p}{)}\PY{p}{)} \PY{p}{,} \PY{l+s}{'}\PY{l+s}{double'} \PY{p}{)}\PY{p}{;}
     \PY{k}{for} \PY{n}{ii} \PY{p}{=} 1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{files}\PY{p}{,}1\PY{p}{)}
         \PY{n}{Image} \PY{p}{=} \PY{n}{imread}\PY{p}{(}\PY{p}{[}\PY{l+s}{'}\PY{l+s}{juggle1/'}\PY{p}{,} \PY{n}{files}\PY{p}{(}\PY{n}{ii}\PY{p}{)}\PY{p}{.}\PY{n}{name}\PY{p}{]}\PY{p}{)}\PY{p}{;}

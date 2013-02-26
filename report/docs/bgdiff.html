@@ -1,8 +1,9 @@
 
-\section{bgdiff.m}
 
 
 
+
+We start by defining threshold values for each colour channel.
 
 
 
@@ -10,29 +11,44 @@
 
 \begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{function}\PY{+w}{ }[res] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{bgdiff}\PY{p}{(}m, bg\PY{p}{)}
-
 \PY{+w}{    }\PY{n}{m} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{;}
     \PY{n}{bg} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{bg}\PY{p}{)}\PY{p}{;}
-
+    
     \PY{n}{tred} \PY{p}{=} 20\PY{p}{;}
     \PY{n}{tgreen} \PY{p}{=} 10\PY{p}{;}
     \PY{n}{tblue} \PY{p}{=} 20\PY{p}{;} 
     \PY{n}{res} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{)}\PY{p}{;}
     
-    \PY{k}{for} \PY{n+nb}{i}\PY{p}{=}1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{,}1\PY{p}{)}
-        \PY{k}{for} \PY{n+nb}{j}\PY{p}{=}1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{,}2\PY{p}{)}            
-                                     
-            \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tred} \PY{o}{|} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tgreen} \PY{o}{|} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}3\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}3\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tblue}
+
+\end{Verbatim}
+
+
+
+
+
+
+
+Then we loop through each pixel and compare the difference in colour
+of our image and the background image to the threshold value. If the
+difference is too big, we set the pixel to black, otherwise we keep
+the original colour.
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]    \PY{k}{for} \PY{n+nb}{i}\PY{p}{=}1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{,}1\PY{p}{)}
+        \PY{k}{for} \PY{n+nb}{j}\PY{p}{=}1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{,}2\PY{p}{)}                    
+            \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tred} \PY{o}{|} \PY{p}{.}\PY{p}{.}\PY{p}{.}
+                    \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tgreen} \PY{o}{|} \PY{p}{.}\PY{p}{.}\PY{p}{.}
+                    \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}3\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}3\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tblue}
                 \PY{n}{res}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}\PY{p}{:}\PY{p}{)} \PY{p}{=} \PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,} \PY{p}{:}\PY{p}{)}\PY{p}{;}
             \PY{k}{else}
                 \PY{n}{res}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}\PY{p}{:}\PY{p}{)} \PY{p}{=}  \PY{p}{[}0\PY{p}{;} 0\PY{p}{;} 0\PY{p}{]}\PY{p}{;}
             \PY{k}{end}        
         \PY{k}{end}
     \PY{k}{end}        
-
-     \PY{n}{res} \PY{p}{=} \PY{n}{uint8}\PY{p}{(}\PY{n}{res}\PY{p}{)}\PY{p}{;}          
-    \PY{n}{n} \PY{p}{=} \PY{n}{bwmorph}\PY{p}{(} \PY{n}{im2bw}\PY{p}{(}\PY{n}{res}\PY{p}{,}0\PY{p}{.}15\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{erode'}\PY{p}{,} 1  \PY{p}{)}\PY{p}{;}
-    \PY{n}{res} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{res}\PY{p}{)}\PY{p}{;}
+    
 
 \end{Verbatim}
 
@@ -42,40 +58,20 @@
 
 
 
-%    figure(2)
-%    imshow(n)
-%    figure(1)          
+Since the difference is calculated from an average image, there are
+plenty of artifacts that can confuse the later algorithm. We make a
+copy of our image and threshold it to black and white. Then we erode
+the images and use the result as a mask to further get rid of areas
+with colours.
 
 
 
 
 
-\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{res}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{,}1\PY{p}{)} \PY{p}{=} \PY{n}{res}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{,}1\PY{p}{)} \PY{o}{.*} \PY{n}{n}\PY{p}{;}
-    \PY{n}{res}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{,}2\PY{p}{)} \PY{p}{=} \PY{n}{res}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{,}2\PY{p}{)} \PY{o}{.*} \PY{n}{n}\PY{p}{;}
-    \PY{n}{res}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{,}3\PY{p}{)} \PY{p}{=} \PY{n}{res}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{,}3\PY{p}{)} \PY{o}{.*} \PY{n}{n}\PY{p}{;}       
-
-\end{Verbatim}
-
-
-
-
-
-
-
+\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{res} \PY{p}{=} \PY{n}{uint8}\PY{p}{(}\PY{n}{res}\PY{p}{)}\PY{p}{;}          
+    \PY{n}{n} \PY{p}{=} \PY{n}{bwmorph}\PY{p}{(}\PY{n}{im2bw}\PY{p}{(}\PY{n}{res}\PY{p}{,}0\PY{p}{.}15\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{erode'}\PY{p}{,} 1\PY{p}{)}\PY{p}{;}
     
-                      
-
-
-
-
-
-\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{res} \PY{p}{=} \PY{n}{uint8}\PY{p}{(}\PY{n}{res}\PY{p}{)}\PY{p}{;}
-
-    
-    
-    
-    
-
+    \PY{n}{res} \PY{p}{=} \PY{n}{uint8}\PY{p}{(}\PY{n}{double}\PY{p}{(}\PY{n}{res}\PY{p}{)} \PY{o}{.*} \PY{n+nb}{repmat}\PY{p}{(}\PY{n}{n}\PY{p}{,} \PY{p}{[}1 1 3\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{;}
 \PY{k}{end}
 
 \end{Verbatim}

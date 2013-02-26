@@ -1,5 +1,5 @@
 
-\section{thresh_yellow.m}
+
 
 
 
@@ -10,65 +10,9 @@
 
 \begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{function}\PY{+w}{ }[res] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{thresh\PYZus{}yellow}\PY{p}{(}m\PY{p}{)}
-\PY{+w}{          }
-\PY{+w}{  }\PY{n}{mhsv} \PY{p}{=} \PY{n+nb}{rgb2hsv}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{;}  
-   
+\PY{+w}{  }\PY{n}{mhsv} \PY{p}{=} \PY{n+nb}{rgb2hsv}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{;}
   \PY{n}{h} \PY{p}{=} \PY{n}{mhsv}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{,}1\PY{p}{)}\PY{p}{;}
-
-\end{Verbatim}
-
-
-
-
-
-
-
-  s = mhsv(:,:,2);
-  v = mhsv(:,:,3);
-
-
-
-
-
-\begin{Verbatim}[commandchars=\\\{\}]  
   \PY{n}{res} \PY{p}{=} \PY{n}{h} \PY{o}{\PYZgt{}} 0\PY{p}{.}13 \PY{o}{\PYZam{}} \PY{n}{h} \PY{o}{\PYZlt{}} 0\PY{p}{.}25\PY{p}{;}
-  
-  
-
-\end{Verbatim}
-
-
-
-
-
-
-
-  class(mhsv)
-  class(h)
-              
-  for i=1:size(mhsv,1)
-      for j=1:size(mhsv,2)            
-          if h(i,j) > 0.13 & h(i,j) < 0.25
-            res(i,j,:) = m(i,j,:);
-          else  
-            res(i,j,:) = [255; 255; 255];
-          end                         
-                  
-      end
-  end        
-
-  res = uint8(res);
-  imshow(res);
-
-
-
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-
-
-
-
 \PY{k}{end}
 
 \end{Verbatim}

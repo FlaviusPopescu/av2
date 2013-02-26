@@ -235,6 +235,25 @@ Finally we need to identify the balls, for that we convert the color
 into HSV colorspace and threshold on the hue. We've measured average
 hues of the balls and chosen constants to pick them out.
 
+Then we simply take the biggest blob from our image and find it's
+centroid.
+
+\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{function}\PY{+w}{ }[C] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{biggest\PYZus{}center}\PY{p}{(}BW\PY{p}{)}
+
+\end{Verbatim}
+
+Find the centroid of the biggest object
+
+\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{CC} \PY{p}{=} \PY{n}{bwconncomp}\PY{p}{(}\PY{n}{BW}\PY{p}{)}\PY{p}{;}
+    \PY{n}{S} \PY{p}{=} \PY{n}{regionprops}\PY{p}{(}\PY{n}{CC}\PY{p}{,}\PY{l+s}{'}\PY{l+s}{Centroid'}\PY{p}{)}\PY{p}{;}
+    \PY{n}{numPixels} \PY{p}{=} \PY{n}{cellfun}\PY{p}{(}\PY{p}{@}\PY{n+nb}{numel}\PY{p}{,}\PY{n}{CC}\PY{p}{.}\PY{n}{PixelIdxList}\PY{p}{)}\PY{p}{;}
+    \PY{p}{[}\PY{n}{biggest}\PY{p}{,}\PY{n}{idx}\PY{p}{]} \PY{p}{=} \PY{n}{max}\PY{p}{(}\PY{n}{numPixels}\PY{p}{)}\PY{p}{;}
+    \PY{n}{C} \PY{p}{=} \PY{n}{S}\PY{p}{(}\PY{n}{idx}\PY{p}{)}\PY{p}{.}\PY{n}{Centroid}\PY{p}{;}
+\PY{k}{end}
+
+\end{Verbatim}
+
 This alone turns out to work remarkably well (see below), however to
 improve performance further, we decided to use our tracking information.
 One constraint on the domain seems to be that the balls only travel a
@@ -255,20 +274,15 @@ number of misclassifications, which we define as any detection that is
 more then 10 pixels away from the true data set. Secondly, we track the
 average (euclidian) distance from the true data set.
 
-The full system achieves
+The full system achieves 99.327\% within 10px of true center (97.980\%
+for the red ball, 100.000\% for the yellow ball, 100.000\% for the blue
+ball). Average distance from true center was 1.836px (SD=1.830).
 
 The system without the tracking system is slightly worse, but still
-achieves
+achieves 97.306\% within 10 pixels of true center and in average is
+5.975 pixels (SD=36.486799) from the true center.
 
-\subsection{Example images}
-
-Each processing stage, balls, clothing, skin.
-
-Trajectories.
-
-Examples of successful and unsuccessful detections.
-
-TODO
+\section{Example images}
 
 \section{Discussion}
 
@@ -300,7 +314,7 @@ apply this function with every image we see.
 The results we get from doing this online decrease to 88.215\% of
 detected balls within 10px of true center.
 
-\section{Source code}
+\section{Appendix: Remaining Source Code}
 
 \subsection{Task 1: Detection}
 
@@ -468,6 +482,35 @@ center, saving to disk those that are more then 10px off.
     \PY{n}{close}\PY{p}{(}\PY{n}{fg}\PY{p}{)}\PY{p}{;}
     \PY{n}{close}\PY{p}{(}\PY{n}{wb}\PY{p}{)}\PY{p}{;}
 
+\PY{k}{end}
+
+\end{Verbatim}
+
+\subsection{Thresholding functions}
+
+\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{function}\PY{+w}{ }[res] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{thresh\PYZus{}blue}\PY{p}{(}m\PY{p}{)}
+\PY{+w}{  }\PY{n}{mhsv} \PY{p}{=} \PY{n+nb}{rgb2hsv}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{;}  
+  \PY{n}{h} \PY{p}{=} \PY{n}{mhsv}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{,}1\PY{p}{)}\PY{p}{;}
+  \PY{n}{res} \PY{p}{=} \PY{n}{h} \PY{o}{\PYZgt{}} 0\PY{p}{.}47 \PY{o}{\PYZam{}} \PY{n}{h} \PY{o}{\PYZlt{}} 0\PY{p}{.}65\PY{p}{;}
+\PY{k}{end}
+
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{function}\PY{+w}{ }[res] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{thresh\PYZus{}yellow}\PY{p}{(}m\PY{p}{)}
+\PY{+w}{  }\PY{n}{mhsv} \PY{p}{=} \PY{n+nb}{rgb2hsv}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{;}
+  \PY{n}{h} \PY{p}{=} \PY{n}{mhsv}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{,}1\PY{p}{)}\PY{p}{;}
+  \PY{n}{res} \PY{p}{=} \PY{n}{h} \PY{o}{\PYZgt{}} 0\PY{p}{.}13 \PY{o}{\PYZam{}} \PY{n}{h} \PY{o}{\PYZlt{}} 0\PY{p}{.}25\PY{p}{;}
+\PY{k}{end}
+
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{function}\PY{+w}{ }[res] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{thresh\PYZus{}red}\PY{p}{(}m\PY{p}{)}
+\PY{+w}{  }\PY{n}{mhsv} \PY{p}{=} \PY{n+nb}{rgb2hsv}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{;}  
+  \PY{n}{h} \PY{p}{=} \PY{n}{mhsv}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{p}{,}1\PY{p}{)}\PY{p}{;}
+  \PY{n}{res} \PY{p}{=} \PY{n}{h} \PY{o}{\PYZgt{}} 0\PY{p}{.}9\PY{p}{;}
 \PY{k}{end}
 
 \end{Verbatim}
