@@ -15,11 +15,13 @@ function main(skip_detection)
     
     wb = waitbar(0, 'Initializing');
     
+    count = size(files,1);
+    
     if nargin == 1 && skip_detection
         tracks = load('track.mat');
         tracks = tracks.tracks;
     else
-        for ii = 1:size(files,1)
+        for ii = 1:count
             tic;
             Image = imread(['juggle1/', files(ii).name]);
             diff = bgdiff(Image, avgbg);
@@ -76,14 +78,29 @@ function main(skip_detection)
     ev = load('gt1.mat');
     gt = ev.gt1';
     
-    yellow_correct = sum(sqrt(sum(gt(:,[7,6]) - tracks(:,[1,2]), 2) .^ 2) < 10)
-    blue_correct   = sum(sqrt(sum(gt(:,[5,4]) - tracks(:,[3,4]), 2) .^ 2) < 10)
-    red_correct    = sum(sqrt(sum(gt(:,[3,2]) - tracks(:,[5,6]), 2) .^ 2) < 10)
+    yellow_d = sqrt(sum(gt(:,[7,6]) - tracks(:,[1,2]), 2) .^ 2);
+    blue_d   = sqrt(sum(gt(:,[5,4]) - tracks(:,[3,4]), 2) .^ 2);
+    red_d    = sqrt(sum(gt(:,[3,2]) - tracks(:,[5,6]), 2) .^ 2);
     
-    overall = (yellow_correct + blue_correct + red_correct) / (size(tracks, 1) * 3)
+    yellow_correct = sum(yellow_d < 10);
+    blue_correct   = sum(blue_d < 10);
+    red_correct    = sum(red_d < 10);
+    
+    overall_d = [yellow_d; blue_d; red_d];
+    overall   = (yellow_correct + blue_correct + red_correct) / (count * 3);
+    
+    disp(sprintf('%f%% within 10px of true center (R=%f%%, Y=%f%%, B=%f%%)', ...
+        overall * 100, red_correct / count * 100, yellow_correct / count * 100, ...
+        blue_correct / count * 100)); 
+    
+    
+    
+    disp(sprintf('Average distance from true center %fpx (SD=%f)', mean(overall_d), std(overall_d)));
     
     fg = figure(1);
-    for ii = 1:size(files,1)
+    delete('fixme/*.png');
+    
+    for ii = 1:count
         tic;
         Image = imread(['juggle1/', files(ii).name]);
         set(fg, 'name', files(ii).name);
@@ -93,6 +110,19 @@ function main(skip_detection)
         drawnow;
         pause(1 - toc)
         perc = (ii + size(files,1))/(size(files,1) * 2 + 4);
+        
+        [pathstr, name, ext] = fileparts(files(ii).name);
+        
+        if yellow_d(ii) > 10 
+            print('-dpng', ['fixme/' name 'yellow']);
+        end
+        if blue_d(ii) > 10
+            print('-dpng', ['fixme/' name 'blue']);
+        end
+        if red_d(ii) > 10
+            print('-dpng', ['fixme/' name 'red']);
+        end
+        
         waitbar(perc,wb,sprintf('%d%% completed...',round(perc * 100)));
     end 
     
