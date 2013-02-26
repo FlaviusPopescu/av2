@@ -6,7 +6,8 @@ function main
     
     
     % Task 1: Detection
-    figure(1, 'I
+    
+    fg = figure(1);
     avgbg = avgall;
     
     files = dir('juggle1/0*.jpg');
@@ -32,15 +33,31 @@ function main
     end 
     
     
-    tracks
     % Task 2: Tracking
-    figure(2);
+    figure(1);
     imshow(imread('background.jpg'))
     hold on
     plot(tracks(:, 1), tracks(:, 2), 'y', tracks(:, 3), tracks(:, 4), 'b')
-    
     print('-dpng', 'report/tracking')
     
+    figure(1);
+    imshow(imread('background.jpg'))
+    hold on
+    plot(tracks(:, 1), tracks(:, 2), 'y')
+    print('-dpng', 'report/tracking-yellow')
+    
+    
+    figure(1);
+    imshow(imread('background.jpg'))
+    hold on
+    plot(tracks(:, 3), tracks(:, 4), 'b')
+    print('-dpng', 'report/tracking-blue')
+    
+    figure(1);
+    imshow(imread('background.jpg'))
+    hold on
+    plot(tracks(:, 5), tracks(:, 6), 'r')
+    print('-dpng', 'report/tracking-red')
        
     
     % Task 3: Evaluation
