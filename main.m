@@ -17,7 +17,7 @@ function main(skip_detection)
     
     count = size(files,1);
     
-    if nargin == 1 && skip_detection
+    if nargin == 1 & skip_detection
         tracks = load('track.mat');
         tracks = tracks.tracks;
     else
@@ -106,7 +106,8 @@ function main(skip_detection)
         set(fg, 'name', files(ii).name);
         imshow(Image);
         hold on
-        plot(tracks(ii, [1,3,5]), tracks(ii, [2,4,6]), 'k+', gt(ii, [7,5,3]), gt(ii, [6,4,2]), 'k*');
+				plot(tracks(ii, 1), tracks(ii, 2), 'y+',tracks(ii, 3), tracks(ii, 4), 'b+', tracks(ii,5), tracks(ii, 6), 'r+');
+				plot(gt(ii, 7), gt(ii, 6), 'y*', gt(ii,5), gt(ii, 4), 'b*', gt(ii,3), gt(ii,2), 'r*');
         drawnow;
         pause(1 - toc)
         perc = (ii + size(files,1))/(size(files,1) * 2 + 4);
