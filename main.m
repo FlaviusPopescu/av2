@@ -1,20 +1,16 @@
-function main(skip_detection)
-    % This function should do the three required tasks from the assignment.
-    % It can also be a place where sample usage of the stuff we created is 
-    % shown, so that we know what the heck some of this stuff does.
-    
-    
-    
-    % Task 1: Detection
-    
-    fg = figure(1);
+% Task 1: Detection
+% -----------------
+%
+% The algorithm starts by calculating the average background from all
+% the images gathered (see `avgall` bellow), and doing some setup.
+% Also an option for skipping this step is presented.
+function main(skip_detection)    
     avgbg = avgall;
     
+    fg = figure(1);
     files = dir('juggle1/0*.jpg');
     tracks = zeros(size(files,1), 6);
-    
     wb = waitbar(0, 'Initializing');
-    
     count = size(files,1);
     
     if nargin == 1 & skip_detection
@@ -24,17 +20,24 @@ function main(skip_detection)
         for ii = 1:count
             tic;
             Image = imread(['juggle1/', files(ii).name]);
+            % The algorithm processes each input image. It substracts the 
+            % average background image, keeping the colours intact in
+            % places where the difference is large enough. Then we
+            % calculate thresholds for the individual color values.
             diff = bgdiff(Image, avgbg);
 
             Y = thresh_yellow(diff);
             B = thresh_blue(diff);
             R = thresh_red(diff);
-
+            
+            % Then we calculate the centroid of the biggest continous blob
+            % in our thresholded image and store them in our tracking
+            % matrix.
             cy = biggest_center(Y);
             cb = biggest_center(B);
             cr = biggest_center(R);
-
             tracks(ii, :) = [cy, cb, cr];
+            
             set(fg, 'name', files(ii).name);
             imshow(R + Y + B);
             hold on
@@ -48,10 +51,15 @@ function main(skip_detection)
     end
     
     % Task 2: Tracking
+    % ----------------
+    % Tracking is largely done in the previous step, here we visualise the
+    % individual required images as well as an overall image of the
+    % juggling.
     figure(1);
     imshow(imread('background.jpg'))
     hold on
-    plot(tracks(:, 1), tracks(:, 2), 'y', tracks(:, 3), tracks(:, 4), 'b', tracks(:, 5), tracks(:, 6), 'r')
+    plot(tracks(:, 1), tracks(:, 2), 'y', tracks(:, 3), ...
+        tracks(:, 4), 'b', tracks(:, 5), tracks(:, 6), 'r')
     print('-dpng', 'report/tracking')
     
     figure(1);
@@ -59,7 +67,6 @@ function main(skip_detection)
     hold on
     plot(tracks(:, 1), tracks(:, 2), 'y')
     print('-dpng', 'report/tracking-yellow')
-    
     
     figure(1);
     imshow(imread('background.jpg'))
@@ -75,6 +82,11 @@ function main(skip_detection)
        
     
     % Task 3: Evaluation
+    % ------------------
+    % 
+    % We load the true data and calculate euclidian distance from the true
+    % data and our tracked data. We then count the number of images that
+    % were tracked more then 10px off as well as the average error.
     ev = load('gt1.mat');
     gt = ev.gt1';
     
@@ -92,22 +104,26 @@ function main(skip_detection)
     disp(sprintf('%f%% within 10px of true center (R=%f%%, Y=%f%%, B=%f%%)', ...
         overall * 100, red_correct / count * 100, yellow_correct / count * 100, ...
         blue_correct / count * 100)); 
-    
-    
-    
-    disp(sprintf('Average distance from true center %fpx (SD=%f)', mean(overall_d), std(overall_d)));
+
+    disp(sprintf('Average distance from true center %fpx (SD=%f)', ...
+        mean(overall_d), std(overall_d)));
     
     fg = figure(1);
     delete('fixme/*.png');
-    
+    % Finally we will display each image with the tracked center and the
+    % real center, saving to disk those that are more then 10px off.
     for ii = 1:count
         tic;
         Image = imread(['juggle1/', files(ii).name]);
         set(fg, 'name', files(ii).name);
         imshow(Image);
         hold on
-				plot(tracks(ii, 1), tracks(ii, 2), 'y+',tracks(ii, 3), tracks(ii, 4), 'b+', tracks(ii,5), tracks(ii, 6), 'r+');
-				plot(gt(ii, 7), gt(ii, 6), 'y*', gt(ii,5), gt(ii, 4), 'b*', gt(ii,3), gt(ii,2), 'r*');
+		plot(tracks(ii, 1), tracks(ii, 2), 'y+', ...
+            tracks(ii, 3), tracks(ii, 4), 'b+', ...
+            tracks(ii,5), tracks(ii, 6), 'r+');
+		plot(gt(ii, 7), gt(ii, 6), 'y*', ...
+            gt(ii,5), gt(ii, 4), 'b*', ...
+            gt(ii,3), gt(ii,2), 'r*');
         drawnow;
         pause(1 - toc)
         perc = (ii + size(files,1))/(size(files,1) * 2 + 4);
@@ -126,9 +142,6 @@ function main(skip_detection)
         
         waitbar(perc,wb,sprintf('%d%% completed...',round(perc * 100)));
     end 
-    
-    
-    % Cleanup
     
     close(fg);
     close(wb);
