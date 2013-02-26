@@ -82,6 +82,8 @@ function main(skip_detection)
             hold on
             plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*', cr(1), cr(2), 'r*');
             drawnow;
+						
+						
             pause(1 - toc)
             perc = ii/(size(files,1) * 2 + 4);
             waitbar(perc,wb,sprintf('%d%% completed...',round(perc * 100)));
