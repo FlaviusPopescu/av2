@@ -130,8 +130,17 @@
 \def\PYZrb{]}
 \makeatother
 
+\title{AV Assignment 2}
+\author{Flavius Popescu, Jakub Hampl}
+\date{}
+
+
+
 
 \begin{document}
+  
+\maketitle
+\abstract{Our assignment}
 
 <%=render "temp-report.latex" %>
 
