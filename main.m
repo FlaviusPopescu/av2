@@ -12,7 +12,11 @@ function main(skip_detection)
     tracks = zeros(size(files,1), 6);
     wb = waitbar(0, 'Initializing');
     count = size(files,1);
+		
+		thresh_reg = 40;
     
+		kinit = 0;
+		
     if nargin == 1 & skip_detection
         tracks = load('track.mat');
         tracks = tracks.tracks;
@@ -26,9 +30,44 @@ function main(skip_detection)
             % calculate thresholds for the individual color values.
             diff = bgdiff(Image, avgbg);
 
-            Y = thresh_yellow(diff);
-            B = thresh_blue(diff);
-            R = thresh_red(diff);
+						diff = double(diff);
+						if kinit == 1
+							yc = round(tracks(ii-1, [1]));
+							yr = round(tracks(ii-1, [2]));
+							bc = round(tracks(ii-1, [3]));
+							br = round(tracks(ii-1, [4]));
+							rc = round(tracks(ii-1, [5]));
+							rr = round(tracks(ii-1, [6]));
+							
+							y_rows = [max(yr - thresh_reg, 1) : min(yr + thresh_reg, size(diff,1))];
+							y_cols = [max(yc - thresh_reg, 1) : min(yc + thresh_reg, size(diff,2))];
+							b_rows = [max(br - thresh_reg, 1) : min(br + thresh_reg, size(diff,1))];
+							b_cols = [max(bc - thresh_reg, 1) : min(bc + thresh_reg, size(diff,2))];
+							r_rows = [max(rr - thresh_reg, 1) : min(rr + thresh_reg, size(diff,1))];
+							r_cols = [max(rc - thresh_reg, 1) : min(rc + thresh_reg, size(diff,2))];
+							
+							y_mask = zeros(size(diff));
+							b_mask = zeros(size(diff));
+							r_mask = zeros(size(diff));
+							
+							y_mask(y_rows, y_cols, :) = 1;
+							b_mask(b_rows, b_cols, :) = 1;
+							r_mask(r_rows, r_cols, :) = 1;
+														
+							ydiff = double(diff .* double(y_mask));
+							bdiff = double(diff .* double(b_mask));
+							rdiff = double(diff .* double(r_mask));
+						else
+							ydiff = diff;
+							bdiff = diff;
+							rdiff = diff;
+						end
+						
+						kinit = 1;
+
+            Y = thresh_yellow(ydiff);
+            B = thresh_blue(bdiff);
+            R = thresh_red(rdiff);
             
             % Then we calculate the centroid of the biggest continous blob
             % in our thresholded image and store them in our tracking
