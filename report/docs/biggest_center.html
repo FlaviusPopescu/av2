@@ -1,0 +1,39 @@
+
+\section{biggest_center.m}
+
+
+
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{function}\PY{+w}{ }[C] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{biggest\PYZus{}center}\PY{p}{(}BW\PY{p}{)}
+
+\end{Verbatim}
+
+
+
+
+
+
+
+Find the centroid of the biggest object
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{CC} \PY{p}{=} \PY{n}{bwconncomp}\PY{p}{(}\PY{n}{BW}\PY{p}{)}\PY{p}{;}
+    \PY{n}{S} \PY{p}{=} \PY{n}{regionprops}\PY{p}{(}\PY{n}{CC}\PY{p}{,}\PY{l+s}{'}\PY{l+s}{Centroid'}\PY{p}{)}\PY{p}{;}
+    \PY{n}{numPixels} \PY{p}{=} \PY{n}{cellfun}\PY{p}{(}\PY{p}{@}\PY{n+nb}{numel}\PY{p}{,}\PY{n}{CC}\PY{p}{.}\PY{n}{PixelIdxList}\PY{p}{)}\PY{p}{;}
+    \PY{p}{[}\PY{n}{biggest}\PY{p}{,}\PY{n}{idx}\PY{p}{]} \PY{p}{=} \PY{n}{max}\PY{p}{(}\PY{n}{numPixels}\PY{p}{)}\PY{p}{;}
+    \PY{n}{C} \PY{p}{=} \PY{n}{S}\PY{p}{(}\PY{n}{idx}\PY{p}{)}\PY{p}{.}\PY{n}{Centroid}\PY{p}{;}
+\PY{k}{end}
+
+\end{Verbatim}
+
+
+
+

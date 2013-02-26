@@ -1,0 +1,223 @@
+
+\section{main.m}
+
+
+
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{function}\PY{+w}{ }\PY{n+nf}{main}\PY{p}{(}skip\PYZus{}detection\PY{p}{)}
+
+\end{Verbatim}
+
+
+
+
+
+
+
+This function should do the three required tasks from the assignment.
+It can also be a place where sample usage of the stuff we created is 
+shown, so that we know what the heck some of this stuff does.
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]    
+    
+    
+
+\end{Verbatim}
+
+
+
+
+
+
+
+Task 1: Detection
+=================
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]    
+    \PY{n}{fg} \PY{p}{=} \PY{n}{figure}\PY{p}{(}1\PY{p}{)}\PY{p}{;}
+    \PY{n}{avgbg} \PY{p}{=} \PY{n}{avgall}\PY{p}{;}
+    
+    \PY{n}{files} \PY{p}{=} \PY{n}{dir}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{juggle1/0*.jpg'}\PY{p}{)}\PY{p}{;}
+    \PY{n}{tracks} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{files}\PY{p}{,}1\PY{p}{)}\PY{p}{,} 6\PY{p}{)}\PY{p}{;}
+    
+    \PY{n}{wb} \PY{p}{=} \PY{n}{waitbar}\PY{p}{(}0\PY{p}{,} \PY{l+s}{'}\PY{l+s}{Initializing'}\PY{p}{)}\PY{p}{;}
+    
+    \PY{n}{count} \PY{p}{=} \PY{n+nb}{size}\PY{p}{(}\PY{n}{files}\PY{p}{,}1\PY{p}{)}\PY{p}{;}
+    
+    \PY{k}{if} \PY{n}{nargin} \PY{o}{==} 1 \PY{o}{\PYZam{}\PYZam{}} \PY{n}{skip\PYZus{}detection}
+        \PY{n}{tracks} \PY{p}{=} \PY{n}{load}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{track.mat'}\PY{p}{)}\PY{p}{;}
+        \PY{n}{tracks} \PY{p}{=} \PY{n}{tracks}\PY{p}{.}\PY{n}{tracks}\PY{p}{;}
+    \PY{k}{else}
+        \PY{k}{for} \PY{n}{ii} \PY{p}{=} 1\PY{p}{:}\PY{n}{count}
+            \PY{n}{tic}\PY{p}{;}
+            \PY{n}{Image} \PY{p}{=} \PY{n}{imread}\PY{p}{(}\PY{p}{[}\PY{l+s}{'}\PY{l+s}{juggle1/'}\PY{p}{,} \PY{n}{files}\PY{p}{(}\PY{n}{ii}\PY{p}{)}\PY{p}{.}\PY{n}{name}\PY{p}{]}\PY{p}{)}\PY{p}{;}
+            \PY{n}{diff} \PY{p}{=} \PY{n}{bgdiff}\PY{p}{(}\PY{n}{Image}\PY{p}{,} \PY{n}{avgbg}\PY{p}{)}\PY{p}{;}
+
+            \PY{n}{Y} \PY{p}{=} \PY{n}{thresh\PYZus{}yellow}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{;}
+            \PY{n}{B} \PY{p}{=} \PY{n}{thresh\PYZus{}blue}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{;}
+            \PY{n}{R} \PY{p}{=} \PY{n}{thresh\PYZus{}red}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{;}
+
+            \PY{n}{cy} \PY{p}{=} \PY{n}{biggest\PYZus{}center}\PY{p}{(}\PY{n}{Y}\PY{p}{)}\PY{p}{;}
+            \PY{n}{cb} \PY{p}{=} \PY{n}{biggest\PYZus{}center}\PY{p}{(}\PY{n}{B}\PY{p}{)}\PY{p}{;}
+            \PY{n}{cr} \PY{p}{=} \PY{n}{biggest\PYZus{}center}\PY{p}{(}\PY{n}{R}\PY{p}{)}\PY{p}{;}
+
+            \PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{p}{,} \PY{p}{:}\PY{p}{)} \PY{p}{=} \PY{p}{[}\PY{n}{cy}\PY{p}{,} \PY{n}{cb}\PY{p}{,} \PY{n}{cr}\PY{p}{]}\PY{p}{;}
+            \PY{n}{set}\PY{p}{(}\PY{n}{fg}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{name'}\PY{p}{,} \PY{n}{files}\PY{p}{(}\PY{n}{ii}\PY{p}{)}\PY{p}{.}\PY{n}{name}\PY{p}{)}\PY{p}{;}
+            \PY{n}{imshow}\PY{p}{(}\PY{n}{R} \PY{o}{+} \PY{n}{Y} \PY{o}{+} \PY{n}{B}\PY{p}{)}\PY{p}{;}
+            \PY{n}{hold} \PY{n}{on}
+            \PY{n}{plot}\PY{p}{(}\PY{n}{cy}\PY{p}{(}1\PY{p}{)}\PY{p}{,} \PY{n}{cy}\PY{p}{(}2\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{y*'}\PY{p}{,} \PY{n}{cb}\PY{p}{(}1\PY{p}{)}\PY{p}{,} \PY{n}{cb}\PY{p}{(}2\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{b*'}\PY{p}{,} \PY{n}{cr}\PY{p}{(}1\PY{p}{)}\PY{p}{,} \PY{n}{cr}\PY{p}{(}2\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{r*'}\PY{p}{)}\PY{p}{;}
+            \PY{n}{drawnow}\PY{p}{;}
+            \PY{n}{pause}\PY{p}{(}1 \PY{o}{-} \PY{n}{toc}\PY{p}{)}
+            \PY{n}{perc} \PY{p}{=} \PY{n}{ii}\PY{o}{/}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{files}\PY{p}{,}1\PY{p}{)} \PY{o}{*} 2 \PY{o}{+} 4\PY{p}{)}\PY{p}{;}
+            \PY{n}{waitbar}\PY{p}{(}\PY{n}{perc}\PY{p}{,}\PY{n}{wb}\PY{p}{,}\PY{n}{sprintf}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{\PYZpc{}d\PYZpc{}\PYZpc{} completed...'}\PY{p}{,}\PY{n+nb}{round}\PY{p}{(}\PY{n}{perc} \PY{o}{*} 100\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+        \PY{k}{end} 
+        \PY{n}{save}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{track.mat'}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{tracks'}\PY{p}{)}\PY{p}{;}
+    \PY{k}{end}
+    
+
+\end{Verbatim}
+
+
+
+
+
+
+
+Task 2: Tracking
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{figure}\PY{p}{(}1\PY{p}{)}\PY{p}{;}
+    \PY{n}{imshow}\PY{p}{(}\PY{n}{imread}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{background.jpg'}\PY{p}{)}\PY{p}{)}
+    \PY{n}{hold} \PY{n}{on}
+    \PY{n}{plot}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 1\PY{p}{)}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 2\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{y'}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 3\PY{p}{)}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 4\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{b'}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 5\PY{p}{)}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 6\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{r'}\PY{p}{)}
+    \PY{n}{print}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{-dpng'}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{report/tracking'}\PY{p}{)}
+    
+    \PY{n}{figure}\PY{p}{(}1\PY{p}{)}\PY{p}{;}
+    \PY{n}{imshow}\PY{p}{(}\PY{n}{imread}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{background.jpg'}\PY{p}{)}\PY{p}{)}
+    \PY{n}{hold} \PY{n}{on}
+    \PY{n}{plot}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 1\PY{p}{)}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 2\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{y'}\PY{p}{)}
+    \PY{n}{print}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{-dpng'}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{report/tracking-yellow'}\PY{p}{)}
+    
+    
+    \PY{n}{figure}\PY{p}{(}1\PY{p}{)}\PY{p}{;}
+    \PY{n}{imshow}\PY{p}{(}\PY{n}{imread}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{background.jpg'}\PY{p}{)}\PY{p}{)}
+    \PY{n}{hold} \PY{n}{on}
+    \PY{n}{plot}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 3\PY{p}{)}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 4\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{b'}\PY{p}{)}
+    \PY{n}{print}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{-dpng'}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{report/tracking-blue'}\PY{p}{)}
+    
+    \PY{n}{figure}\PY{p}{(}1\PY{p}{)}\PY{p}{;}
+    \PY{n}{imshow}\PY{p}{(}\PY{n}{imread}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{background.jpg'}\PY{p}{)}\PY{p}{)}
+    \PY{n}{hold} \PY{n}{on}
+    \PY{n}{plot}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 5\PY{p}{)}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 6\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{r'}\PY{p}{)}
+    \PY{n}{print}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{-dpng'}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{report/tracking-red'}\PY{p}{)}
+       
+    
+
+\end{Verbatim}
+
+
+
+
+
+
+
+Task 3: Evaluation
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{ev} \PY{p}{=} \PY{n}{load}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{gt1.mat'}\PY{p}{)}\PY{p}{;}
+    \PY{n}{gt} \PY{p}{=} \PY{n}{ev}\PY{p}{.}\PY{n}{gt1}\PY{o}{'}\PY{p}{;}
+    
+    \PY{n}{yellow\PYZus{}d} \PY{p}{=} \PY{n+nb}{sqrt}\PY{p}{(}\PY{n}{sum}\PY{p}{(}\PY{n}{gt}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{[}7\PY{p}{,}6\PY{p}{]}\PY{p}{)} \PY{o}{-} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{[}1\PY{p}{,}2\PY{p}{]}\PY{p}{)}\PY{p}{,} 2\PY{p}{)} \PY{o}{.\PYZca{}} 2\PY{p}{)}\PY{p}{;}
+    \PY{n}{blue\PYZus{}d}   \PY{p}{=} \PY{n+nb}{sqrt}\PY{p}{(}\PY{n}{sum}\PY{p}{(}\PY{n}{gt}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{[}5\PY{p}{,}4\PY{p}{]}\PY{p}{)} \PY{o}{-} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{[}3\PY{p}{,}4\PY{p}{]}\PY{p}{)}\PY{p}{,} 2\PY{p}{)} \PY{o}{.\PYZca{}} 2\PY{p}{)}\PY{p}{;}
+    \PY{n}{red\PYZus{}d}    \PY{p}{=} \PY{n+nb}{sqrt}\PY{p}{(}\PY{n}{sum}\PY{p}{(}\PY{n}{gt}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{[}3\PY{p}{,}2\PY{p}{]}\PY{p}{)} \PY{o}{-} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{[}5\PY{p}{,}6\PY{p}{]}\PY{p}{)}\PY{p}{,} 2\PY{p}{)} \PY{o}{.\PYZca{}} 2\PY{p}{)}\PY{p}{;}
+    
+    \PY{n}{yellow\PYZus{}correct} \PY{p}{=} \PY{n}{sum}\PY{p}{(}\PY{n}{yellow\PYZus{}d} \PY{o}{\PYZlt{}} 10\PY{p}{)}\PY{p}{;}
+    \PY{n}{blue\PYZus{}correct}   \PY{p}{=} \PY{n}{sum}\PY{p}{(}\PY{n}{blue\PYZus{}d} \PY{o}{\PYZlt{}} 10\PY{p}{)}\PY{p}{;}
+    \PY{n}{red\PYZus{}correct}    \PY{p}{=} \PY{n}{sum}\PY{p}{(}\PY{n}{red\PYZus{}d} \PY{o}{\PYZlt{}} 10\PY{p}{)}\PY{p}{;}
+    
+    \PY{n}{overall\PYZus{}d} \PY{p}{=} \PY{p}{[}\PY{n}{yellow\PYZus{}d}\PY{p}{;} \PY{n}{blue\PYZus{}d}\PY{p}{;} \PY{n}{red\PYZus{}d}\PY{p}{]}\PY{p}{;}
+    \PY{n}{overall}   \PY{p}{=} \PY{p}{(}\PY{n}{yellow\PYZus{}correct} \PY{o}{+} \PY{n}{blue\PYZus{}correct} \PY{o}{+} \PY{n}{red\PYZus{}correct}\PY{p}{)} \PY{o}{/} \PY{p}{(}\PY{n}{count} \PY{o}{*} 3\PY{p}{)}\PY{p}{;}
+    
+    \PY{n+nb}{disp}\PY{p}{(}\PY{n}{sprintf}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{\PYZpc{}f\PYZpc{}\PYZpc{} within 10px of true center (R=\PYZpc{}f\PYZpc{}\PYZpc{}, Y=\PYZpc{}f\PYZpc{}\PYZpc{}, B=\PYZpc{}f\PYZpc{}\PYZpc{})'}\PY{p}{,} \PY{p}{.}\PY{p}{.}\PY{p}{.}
+        \PY{n}{overall} \PY{o}{*} 100\PY{p}{,} \PY{n}{red\PYZus{}correct} \PY{o}{/} \PY{n}{count} \PY{o}{*} 100\PY{p}{,} \PY{n}{yellow\PYZus{}correct} \PY{o}{/} \PY{n}{count} \PY{o}{*} 100\PY{p}{,} \PY{p}{.}\PY{p}{.}\PY{p}{.}
+        \PY{n}{blue\PYZus{}correct} \PY{o}{/} \PY{n}{count} \PY{o}{*} 100\PY{p}{)}\PY{p}{)}\PY{p}{;} 
+    
+    
+    
+    \PY{n+nb}{disp}\PY{p}{(}\PY{n}{sprintf}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{Average distance from true center \PYZpc{}fpx (SD=\PYZpc{}f)'}\PY{p}{,} \PY{n}{mean}\PY{p}{(}\PY{n}{overall\PYZus{}d}\PY{p}{)}\PY{p}{,} \PY{n}{std}\PY{p}{(}\PY{n}{overall\PYZus{}d}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+    
+    \PY{n}{fg} \PY{p}{=} \PY{n}{figure}\PY{p}{(}1\PY{p}{)}\PY{p}{;}
+    \PY{n}{delete}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{fixme/*.png'}\PY{p}{)}\PY{p}{;}
+    
+    \PY{k}{for} \PY{n}{ii} \PY{p}{=} 1\PY{p}{:}\PY{n}{count}
+        \PY{n}{tic}\PY{p}{;}
+        \PY{n}{Image} \PY{p}{=} \PY{n}{imread}\PY{p}{(}\PY{p}{[}\PY{l+s}{'}\PY{l+s}{juggle1/'}\PY{p}{,} \PY{n}{files}\PY{p}{(}\PY{n}{ii}\PY{p}{)}\PY{p}{.}\PY{n}{name}\PY{p}{]}\PY{p}{)}\PY{p}{;}
+        \PY{n}{set}\PY{p}{(}\PY{n}{fg}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{name'}\PY{p}{,} \PY{n}{files}\PY{p}{(}\PY{n}{ii}\PY{p}{)}\PY{p}{.}\PY{n}{name}\PY{p}{)}\PY{p}{;}
+        \PY{n}{imshow}\PY{p}{(}\PY{n}{Image}\PY{p}{)}\PY{p}{;}
+        \PY{n}{hold} \PY{n}{on}
+        \PY{n}{plot}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{p}{,} \PY{p}{[}1\PY{p}{,}3\PY{p}{,}5\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{p}{,} \PY{p}{[}2\PY{p}{,}4\PY{p}{,}6\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{k+'}\PY{p}{,} \PY{n}{gt}\PY{p}{(}\PY{n}{ii}\PY{p}{,} \PY{p}{[}7\PY{p}{,}5\PY{p}{,}3\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{gt}\PY{p}{(}\PY{n}{ii}\PY{p}{,} \PY{p}{[}6\PY{p}{,}4\PY{p}{,}2\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{k*'}\PY{p}{)}\PY{p}{;}
+        \PY{n}{drawnow}\PY{p}{;}
+        \PY{n}{pause}\PY{p}{(}1 \PY{o}{-} \PY{n}{toc}\PY{p}{)}
+        \PY{n}{perc} \PY{p}{=} \PY{p}{(}\PY{n}{ii} \PY{o}{+} \PY{n+nb}{size}\PY{p}{(}\PY{n}{files}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{files}\PY{p}{,}1\PY{p}{)} \PY{o}{*} 2 \PY{o}{+} 4\PY{p}{)}\PY{p}{;}
+        
+        \PY{p}{[}\PY{n}{pathstr}\PY{p}{,} \PY{n}{name}\PY{p}{,} \PY{n}{ext}\PY{p}{]} \PY{p}{=} \PY{n}{fileparts}\PY{p}{(}\PY{n}{files}\PY{p}{(}\PY{n}{ii}\PY{p}{)}\PY{p}{.}\PY{n}{name}\PY{p}{)}\PY{p}{;}
+        
+        \PY{k}{if} \PY{n}{yellow\PYZus{}d}\PY{p}{(}\PY{n}{ii}\PY{p}{)} \PY{o}{\PYZgt{}} 10 
+            \PY{n}{print}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{-dpng'}\PY{p}{,} \PY{p}{[}\PY{l+s}{'}\PY{l+s}{fixme/'} \PY{n}{name} \PY{l+s}{'}\PY{l+s}{yellow'}\PY{p}{]}\PY{p}{)}\PY{p}{;}
+        \PY{k}{end}
+        \PY{k}{if} \PY{n}{blue\PYZus{}d}\PY{p}{(}\PY{n}{ii}\PY{p}{)} \PY{o}{\PYZgt{}} 10
+            \PY{n}{print}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{-dpng'}\PY{p}{,} \PY{p}{[}\PY{l+s}{'}\PY{l+s}{fixme/'} \PY{n}{name} \PY{l+s}{'}\PY{l+s}{blue'}\PY{p}{]}\PY{p}{)}\PY{p}{;}
+        \PY{k}{end}
+        \PY{k}{if} \PY{n}{red\PYZus{}d}\PY{p}{(}\PY{n}{ii}\PY{p}{)} \PY{o}{\PYZgt{}} 10
+            \PY{n}{print}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{-dpng'}\PY{p}{,} \PY{p}{[}\PY{l+s}{'}\PY{l+s}{fixme/'} \PY{n}{name} \PY{l+s}{'}\PY{l+s}{red'}\PY{p}{]}\PY{p}{)}\PY{p}{;}
+        \PY{k}{end}
+        
+        \PY{n}{waitbar}\PY{p}{(}\PY{n}{perc}\PY{p}{,}\PY{n}{wb}\PY{p}{,}\PY{n}{sprintf}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{\PYZpc{}d\PYZpc{}\PYZpc{} completed...'}\PY{p}{,}\PY{n+nb}{round}\PY{p}{(}\PY{n}{perc} \PY{o}{*} 100\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+    \PY{k}{end} 
+    
+    
+
+\end{Verbatim}
+
+
+
+
+
+
+
+Cleanup
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]    
+    \PY{n}{close}\PY{p}{(}\PY{n}{fg}\PY{p}{)}\PY{p}{;}
+    \PY{n}{close}\PY{p}{(}\PY{n}{wb}\PY{p}{)}\PY{p}{;}
+    
+\PY{k}{end}
+
+\end{Verbatim}
+
+
+
+

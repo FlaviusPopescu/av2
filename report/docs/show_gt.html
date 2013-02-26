@@ -1,0 +1,67 @@
+
+\section{show_gt.m}
+
+
+
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{load} \PY{n}{gt1}
+
+\PY{n}{files} \PY{p}{=} \PY{n}{dir}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{juggle1/0*.jpg'}\PY{p}{)}
+
+\PY{n}{figure}\PY{p}{(}1\PY{p}{)}\PY{p}{;}
+\PY{k}{for} \PY{n}{ii} \PY{p}{=} 1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{files}\PY{p}{,}1\PY{p}{)}
+    \PY{n}{Image} \PY{p}{=} \PY{n}{imread}\PY{p}{(}\PY{p}{[}\PY{l+s}{'}\PY{l+s}{juggle1/'}\PY{p}{,} \PY{n}{files}\PY{p}{(}\PY{n}{ii}\PY{p}{)}\PY{p}{.}\PY{n}{name}\PY{p}{]}\PY{p}{)}\PY{p}{;}
+    \PY{n}{imshow}\PY{p}{(}\PY{n}{Image}\PY{p}{)}\PY{p}{;}
+    \PY{n}{hold} \PY{n}{on}\PY{p}{;}   
+    
+
+\end{Verbatim}
+
+
+
+
+
+
+
+plot ground truth points
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{plot}\PY{p}{(}\PY{n}{gt1}\PY{p}{(}3\PY{p}{,}\PY{n}{ii}\PY{p}{)}\PY{p}{,}\PY{n}{gt1}\PY{p}{(}2\PY{p}{,}\PY{n}{ii}\PY{p}{)}\PY{p}{,}\PY{l+s}{'}\PY{l+s}{r.'}\PY{p}{)}\PY{p}{;}
+    \PY{n}{plot}\PY{p}{(}\PY{n}{gt1}\PY{p}{(}5\PY{p}{,}\PY{n}{ii}\PY{p}{)}\PY{p}{,}\PY{n}{gt1}\PY{p}{(}4\PY{p}{,}\PY{n}{ii}\PY{p}{)}\PY{p}{,}\PY{l+s}{'}\PY{l+s}{g.'}\PY{p}{)}\PY{p}{;}
+    \PY{n}{plot}\PY{p}{(}\PY{n}{gt1}\PY{p}{(}7\PY{p}{,}\PY{n}{ii}\PY{p}{)}\PY{p}{,}\PY{n}{gt1}\PY{p}{(}6\PY{p}{,}\PY{n}{ii}\PY{p}{)}\PY{p}{,}\PY{l+s}{'}\PY{l+s}{y.'}\PY{p}{)}\PY{p}{;}
+    
+
+\end{Verbatim}
+
+
+
+
+
+
+
+calculate ball centres
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]    
+    
+    
+    \PY{n}{drawnow}\PY{p}{;}
+    \PY{n}{pause}\PY{p}{(}1\PY{p}{)}
+\PY{k}{end}
+
+\end{Verbatim}
+
+
+
+

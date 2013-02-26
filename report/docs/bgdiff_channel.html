@@ -1,0 +1,81 @@
+
+\section{bgdiff_channel.m}
+
+
+
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{function}\PY{+w}{ }[res] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{bgdiff\PYZus{}channel}\PY{p}{(}m, bg\PY{p}{)}
+
+\PY{+w}{    }\PY{n}{m} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{;}
+    \PY{n}{bg} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{bg}\PY{p}{)}\PY{p}{;}
+
+    \PY{n}{tred} \PY{p}{=} 50\PY{p}{;}
+    \PY{n}{tgreen} \PY{p}{=} 50\PY{p}{;}
+    \PY{n}{tblue} \PY{p}{=} 50\PY{p}{;} 
+    \PY{n}{res} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+    
+    \PY{k}{for} \PY{n+nb}{i}\PY{p}{=}1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{,}1\PY{p}{)}
+        \PY{k}{for} \PY{n+nb}{j}\PY{p}{=}1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{,}2\PY{p}{)}            
+                                    
+                                                                                                                        
+
+\end{Verbatim}
+
+
+
+
+
+
+
+if i == 243 & j == 327
+   m(i,j,:)
+   bg(i,j,:)   
+   abs(m(i,j,1) - bg(i,j,1))
+   'asdf'
+   m(i,j,1)
+   bg(i,j,1)                                                                                             
+   'asdf'
+   (abs(m(i,j,1) - bg(i,j,1)) > tred) | (abs(m(i,j,2) - bg(i,j,2)) > tgreen) | (abs(m(i,j,3) - bg(i,j,3)) > tblue)
+end
+
+
+
+
+
+\begin{Verbatim}[commandchars=\\\{\}]            
+            \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tred}
+                \PY{n}{res}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)} \PY{p}{=} \PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)}\PY{p}{;}
+            \PY{k}{else}
+                \PY{n}{res}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)} \PY{p}{=} 0\PY{p}{;}
+            \PY{k}{end}                                
+            
+            \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tgreen}
+                \PY{n}{res}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)} \PY{p}{=} \PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)}\PY{p}{;}
+            \PY{k}{else}
+                \PY{n}{res}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)} \PY{p}{=} 0\PY{p}{;}
+            \PY{k}{end}                                
+            
+            \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}3\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}3\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tblue}
+                \PY{n}{res}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}3\PY{p}{)} \PY{p}{=} \PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}3\PY{p}{)}\PY{p}{;}
+            \PY{k}{else}
+                \PY{n}{res}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}3\PY{p}{)} \PY{p}{=} 0\PY{p}{;}
+            \PY{k}{end}                                
+        \PY{k}{end}
+    \PY{k}{end}      
+    \PY{n}{res} \PY{p}{=} \PY{n}{uint8}\PY{p}{(}\PY{n}{res}\PY{p}{)}\PY{p}{;}
+    
+    
+    
+
+\PY{k}{end}
+
+\end{Verbatim}
+
+
+
+
