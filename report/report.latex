@@ -361,16 +361,17 @@ segment of interest.}
 \label{overlaid}
 \end{figure}
 
-\section{Performance}
+\section{Results}
 
 To evaluate performance two metrics are used. Firstly we count the
 number of misclassifications, which we define as any detection that is
 more then 10 pixels away from the true data set. Secondly, we track the
 average (Euclidean) distance from the true data set.
 
-The full system achieves 99.327\% within 10px of true center (97.980\%
-for the red ball, 100.000\% for the yellow ball, 100.000\% for the blue
-ball). Average distance from true center was 1.836px (SD=1.830).
+The full system achieves 100\% accuracy within 10px of true center (100.000\% 
+for each of the balls), a training error of 0\%. Average distance from 
+true center was 1.836px (SD=1.830).
+
 
 Without using the position tracking history, the system performs
 slightly worse, but still achieves 97.306\% within 10 pixels of true
@@ -378,7 +379,8 @@ center and in average is 5.975 pixels (SD=36.486799) from the true
 center.
 
 Figure \ref{wrong} illustrates examples
-for which the error distance is larger than 10 pixels.
+for which the error distance is larger than 6 pixels,
+the two worst detections.
 
 \begin{figure}[htbp]
 \centering
@@ -386,7 +388,7 @@ for which the error distance is larger than 10 pixels.
 \includegraphics[width=0.95\linewidth]{img-unsuccessful1.png}
 \includegraphics[width=0.95\linewidth]{img-unsuccessful2.png}
 
-\caption{Examples of unsuccessful recogniton. The star and plus symbols represent the ground truth and detected centroids, respectively. In these images, they are offset by more than 10 pixels due to blur in the image. }
+\caption{Examples of recognition with a distance larger than 6 pixels. The star and plus symbols represent the ground truth and detected centroids, respectively. In these images, they are offset by more than 6 pixels due to blur in the image. }
 \label{wrong}
 \end{figure}
 
@@ -453,7 +455,7 @@ apply this function with every image we see.
 The results we get from doing this online decrease to 88.215\% of
 detected balls within 10px of true center.
 
-The unsuccessful detections illustrated above occur due an inaccurate
+The unsuccessful (within 6 pixel) detections illustrated above occur due an inaccurate
 calculation of the blob centroids, after the thresholding stage. This can
 also happen when the balls are partially concealed by the juggler's fingers
 which deteriorates the visible round shape. In addition, not all skin
