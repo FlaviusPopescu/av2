@@ -139,11 +139,9 @@
 \def\PYZrb{]}
 \makeatother
 
-\title{AV Assignment 2}
+\title{Advanced Vision \\ Assignment 2}
 \author{Flavius Popescu, Jakub Hampl}
-\date{}
-
-
+\date{\today}
 
 
 \begin{document}
@@ -321,7 +319,7 @@ frame in figure \ref{frame5}.
 \centering
 \includegraphics[width=0.8\linewidth]{img-tracks-5-cross-color.png}
 \caption{The detection algorithm applied to a frame. The coloured
-crosses reveal the computed centroids for each of the three balls.}
+plus symbols reveal the computed centroids for each of the three balls.}
 \label{frame5}
 \end{figure}
 
@@ -379,18 +377,17 @@ slightly worse, but still achieves 97.306\% within 10 pixels of true
 center and in average is 5.975 pixels (SD=36.486799) from the true
 center.
 
-Figures \ref{unsuccessful1} and \ref{unsuccessful2} illustrate examples
+Figure \ref{wrong} illustrates examples
 for which the error distance is larger than 10 pixels.
 
 \begin{figure}[htbp]
 \centering
 
-\includegraphics[width=0.5\linewidth]{img-unsuccessful1.png}
-\label{unsuccessful1}
+\includegraphics[width=0.95\linewidth]{img-unsuccessful1.png}
+\includegraphics[width=0.95\linewidth]{img-unsuccessful2.png}
 
-\includegraphics[width=0.5\linewidth]{img-unsuccessful2.png}
-\label{unsuccessful2}
-\caption{Examples of unsuccesfull recogniton}
+\caption{Examples of unsuccessful recogniton. The star and plus symbols represent the ground truth and detected centroids, respectively. In these images, they are offset by more than 10 pixels due to blur in the image. }
+\label{wrong}
 \end{figure}
 
 Figures \ref{img-tracking-red}, \ref{img-tracking-yellow} and
@@ -457,8 +454,8 @@ The results we get from doing this online decrease to 88.215\% of
 detected balls within 10px of true center.
 
 The unsuccessful detections illustrated above occur due an inaccurate
-calculation of the blob centroids, after the thresholding stage. This
-happens when the balls are partially concealed by the juggler's fingers
+calculation of the blob centroids, after the thresholding stage. This can
+also happen when the balls are partially concealed by the juggler's fingers
 which deteriorates the visible round shape. In addition, not all skin
 pixels are removed. A system based on histograms ({[}1{]}) or Gaussian
 models ({[}2{]}) could be employed for skin detection. Then, partial
@@ -515,12 +512,18 @@ individual color values.
                         \PY{n}{rc} \PY{p}{=} \PY{n+nb}{round}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{o}{-}1\PY{p}{,} \PY{p}{[}5\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{;}
                         \PY{n}{rr} \PY{p}{=} \PY{n+nb}{round}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{o}{-}1\PY{p}{,} \PY{p}{[}6\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{;}
 
-                        \PY{n}{y\PYZus{}rows} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{yr} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{yr} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
-                        \PY{n}{y\PYZus{}cols} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{yc} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{yc} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}2\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
-                        \PY{n}{b\PYZus{}rows} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{br} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{br} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
-                        \PY{n}{b\PYZus{}cols} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{bc} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{bc} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}2\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
-                        \PY{n}{r\PYZus{}rows} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{rr} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{rr} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
-                        \PY{n}{r\PYZus{}cols} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{rc} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{rc} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}2\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+                        \PY{n}{y\PYZus{}rows} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{yr} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\\
+\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{yr} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+                        \PY{n}{y\PYZus{}cols} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{yc} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\\
+\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{yc} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}2\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+                        \PY{n}{b\PYZus{}rows} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{br} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\\
+\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{br} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+                        \PY{n}{b\PYZus{}cols} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{bc} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\\
+\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{bc} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}2\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+                        \PY{n}{r\PYZus{}rows} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{rr} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\\
+\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{rr} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+                        \PY{n}{r\PYZus{}cols} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{rc} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\\
+\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{rc} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}2\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
 
                         \PY{n}{y\PYZus{}mask} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{)}\PY{p}{;}
                         \PY{n}{b\PYZus{}mask} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{)}\PY{p}{;}
