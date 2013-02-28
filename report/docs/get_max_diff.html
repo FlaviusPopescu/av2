@@ -7,8 +7,7 @@
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{function}\PY{+w}{ }[res] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{get\PYZus{}max\PYZus{}diff}\PY{p}{(}\PY{p}{)}
 \PY{+w}{    }\PY{n}{ev} \PY{p}{=} \PY{n}{load}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{gt1.mat'}\PY{p}{)}\PY{p}{;}
     \PY{n}{gt} \PY{p}{=} \PY{n}{ev}\PY{p}{.}\PY{n}{gt1}\PY{o}{'}\PY{p}{;}
@@ -29,8 +28,7 @@ we calculate the maximum difference.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]	\PY{n}{t1} \PY{p}{=} \PY{n}{gt}\PY{p}{(}\PY{p}{[}1\PY{p}{:}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{gt}\PY{p}{,}1\PY{p}{)}\PY{o}{-}1\PY{p}{)}\PY{p}{]}\PY{p}{,} \PY{p}{:}\PY{p}{)}\PY{p}{;}
+	\PY{n}{t1} \PY{p}{=} \PY{n}{gt}\PY{p}{(}\PY{p}{[}1\PY{p}{:}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{gt}\PY{p}{,}1\PY{p}{)}\PY{o}{-}1\PY{p}{)}\PY{p}{]}\PY{p}{,} \PY{p}{:}\PY{p}{)}\PY{p}{;}
     \PY{n}{t2} \PY{p}{=} \PY{n}{gt}\PY{p}{(}\PY{p}{[}2\PY{p}{:}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{gt}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{,} \PY{p}{:}\PY{p}{)}\PY{p}{;}
 		
 	\PY{n}{res} \PY{p}{=} \PY{n}{max}\PY{p}{(}\PY{p}{[} \PY{n+nb}{sqrt}\PY{p}{(}\PY{n}{sum}\PY{p}{(}\PY{n}{t1}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{[}1\PY{p}{,}2\PY{p}{]}\PY{p}{)} \PY{o}{-} \PY{n}{t2}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{[}1\PY{p}{,}2\PY{p}{]}\PY{p}{)}\PY{p}{,} 2\PY{p}{)} \PY{o}{.\PYZca{}} 2\PY{p}{)}\PY{p}{;}

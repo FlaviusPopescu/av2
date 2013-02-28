@@ -8,8 +8,7 @@ We start by defining threshold values for each colour channel.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{function}\PY{+w}{ }[res] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{bgdiff}\PY{p}{(}m, bg\PY{p}{)}
 \PY{+w}{    }\PY{n}{m} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{;}
     \PY{n}{bg} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{bg}\PY{p}{)}\PY{p}{;}
@@ -36,8 +35,7 @@ the original colour.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]    \PY{k}{for} \PY{n+nb}{i}\PY{p}{=}1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{,}1\PY{p}{)}
+    \PY{k}{for} \PY{n+nb}{i}\PY{p}{=}1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{,}1\PY{p}{)}
         \PY{k}{for} \PY{n+nb}{j}\PY{p}{=}1\PY{p}{:}\PY{n+nb}{size}\PY{p}{(}\PY{n}{m}\PY{p}{,}2\PY{p}{)}                    
             \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}1\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tred} \PY{o}{|} \PY{p}{.}\PY{p}{.}\PY{p}{.}
                     \PY{n+nb}{abs}\PY{p}{(}\PY{n}{m}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)} \PY{o}{-} \PY{n}{bg}\PY{p}{(}\PY{n+nb}{i}\PY{p}{,}\PY{n+nb}{j}\PY{p}{,}2\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{tgreen} \PY{o}{|} \PY{p}{.}\PY{p}{.}\PY{p}{.}
@@ -67,10 +65,8 @@ with colours.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{res} \PY{p}{=} \PY{n}{uint8}\PY{p}{(}\PY{n}{res}\PY{p}{)}\PY{p}{;}          
-    \PY{n}{n} \PY{p}{=} \PY{n}{bwmorph}\PY{p}{(}\PY{n}{im2bw}\PY{p}{(}\PY{n}{res}\PY{p}{,}0\PY{p}{.}15\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{erode'}\PY{p}{,} 1\PY{p}{)}\PY{p}{;}
-    
+    \PY{n}{res} \PY{p}{=} \PY{n}{uint8}\PY{p}{(}\PY{n}{res}\PY{p}{)}\PY{p}{;}          
+    \PY{n}{n} \PY{p}{=} \PY{n}{bwmorph}\PY{p}{(}\PY{n}{im2bw}\PY{p}{(}\PY{n}{res}\PY{p}{,}0\PY{p}{.}15\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{erode'}\PY{p}{,} 1\PY{p}{)}\PY{p}{;}    
     \PY{n}{res} \PY{p}{=} \PY{n}{uint8}\PY{p}{(}\PY{n}{double}\PY{p}{(}\PY{n}{res}\PY{p}{)} \PY{o}{.*} \PY{n+nb}{repmat}\PY{p}{(}\PY{n}{n}\PY{p}{,} \PY{p}{[}1 1 3\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{;}
 \PY{k}{end}
 

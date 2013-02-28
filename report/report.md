@@ -9,7 +9,7 @@ We found that taking an average over the entire set of images provides a much be
 
 <%= render 'docs/avgall.html' %>
 
-![Average background computed over the entire set of images \label{avgbackground}](img-backgroundavg.jpg)
+![Average background computed over the entire set of images \label{avgbackground}](img-backgroundavg.png)
 
 When subtracting the background, the difference in pixel colour between a given frame and the averaged background is computed and thresholded for each RGB channel. The threshold values were determined empirically. During this step we also need to preserve colour information since we later detect the balls through colour thresholding. 
 

@@ -12,8 +12,7 @@ Also an option for skipping this step is presented.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{function}\PY{+w}{ }\PY{n+nf}{main}\PY{p}{(}skip\PYZus{}detection\PY{p}{)}\PY{+w}{    }
 \PY{+w}{    }\PY{n}{avgbg} \PY{p}{=} \PY{n}{avgall}\PY{p}{;}
     
@@ -22,7 +21,11 @@ Also an option for skipping this step is presented.
     \PY{n}{tracks} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{files}\PY{p}{,}1\PY{p}{)}\PY{p}{,} 6\PY{p}{)}\PY{p}{;}
     \PY{n}{wb} \PY{p}{=} \PY{n}{waitbar}\PY{p}{(}0\PY{p}{,} \PY{l+s}{'}\PY{l+s}{Initializing'}\PY{p}{)}\PY{p}{;}
     \PY{n}{count} \PY{p}{=} \PY{n+nb}{size}\PY{p}{(}\PY{n}{files}\PY{p}{,}1\PY{p}{)}\PY{p}{;}
+		
+		\PY{n}{thresh\PYZus{}reg} \PY{p}{=} 40\PY{p}{;}
     
+		\PY{n}{kinit} \PY{p}{=} 0\PY{p}{;}
+		
     \PY{k}{if} \PY{n}{nargin} \PY{o}{==} 1 \PY{o}{\PYZam{}} \PY{n}{skip\PYZus{}detection}
         \PY{n}{tracks} \PY{p}{=} \PY{n}{load}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{track.mat'}\PY{p}{)}\PY{p}{;}
         \PY{n}{tracks} \PY{p}{=} \PY{n}{tracks}\PY{p}{.}\PY{n}{tracks}\PY{p}{;}
@@ -47,12 +50,46 @@ calculate thresholds for the individual color values.
 
 
 
+            \PY{n}{diff} \PY{p}{=} \PY{n}{bgdiff}\PY{p}{(}\PY{n}{Image}\PY{p}{,} \PY{n}{avgbg}\PY{p}{)}\PY{p}{;}
 
-\begin{Verbatim}[commandchars=\\\{\}]            \PY{n}{diff} \PY{p}{=} \PY{n}{bgdiff}\PY{p}{(}\PY{n}{Image}\PY{p}{,} \PY{n}{avgbg}\PY{p}{)}\PY{p}{;}
+						\PY{n}{diff} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{;}
+						\PY{k}{if} \PY{n}{kinit} \PY{o}{==} 1
+							\PY{n}{yc} \PY{p}{=} \PY{n+nb}{round}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{o}{-}1\PY{p}{,} \PY{p}{[}1\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							\PY{n}{yr} \PY{p}{=} \PY{n+nb}{round}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{o}{-}1\PY{p}{,} \PY{p}{[}2\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							\PY{n}{bc} \PY{p}{=} \PY{n+nb}{round}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{o}{-}1\PY{p}{,} \PY{p}{[}3\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							\PY{n}{br} \PY{p}{=} \PY{n+nb}{round}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{o}{-}1\PY{p}{,} \PY{p}{[}4\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							\PY{n}{rc} \PY{p}{=} \PY{n+nb}{round}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{o}{-}1\PY{p}{,} \PY{p}{[}5\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							\PY{n}{rr} \PY{p}{=} \PY{n+nb}{round}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{o}{-}1\PY{p}{,} \PY{p}{[}6\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							
+							\PY{n}{y\PYZus{}rows} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{yr} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{yr} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+							\PY{n}{y\PYZus{}cols} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{yc} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{yc} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}2\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+							\PY{n}{b\PYZus{}rows} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{br} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{br} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+							\PY{n}{b\PYZus{}cols} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{bc} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{bc} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}2\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+							\PY{n}{r\PYZus{}rows} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{rr} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{rr} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}1\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+							\PY{n}{r\PYZus{}cols} \PY{p}{=} \PY{p}{[}\PY{n}{max}\PY{p}{(}\PY{n}{rc} \PY{o}{-} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} 1\PY{p}{)} \PY{p}{:} \PY{n}{min}\PY{p}{(}\PY{n}{rc} \PY{o}{+} \PY{n}{thresh\PYZus{}reg}\PY{p}{,} \PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{,}2\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{;}
+							
+							\PY{n}{y\PYZus{}mask} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							\PY{n}{b\PYZus{}mask} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							\PY{n}{r\PYZus{}mask} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							
+							\PY{n}{y\PYZus{}mask}\PY{p}{(}\PY{n}{y\PYZus{}rows}\PY{p}{,} \PY{n}{y\PYZus{}cols}\PY{p}{,} \PY{p}{:}\PY{p}{)} \PY{p}{=} 1\PY{p}{;}
+							\PY{n}{b\PYZus{}mask}\PY{p}{(}\PY{n}{b\PYZus{}rows}\PY{p}{,} \PY{n}{b\PYZus{}cols}\PY{p}{,} \PY{p}{:}\PY{p}{)} \PY{p}{=} 1\PY{p}{;}
+							\PY{n}{r\PYZus{}mask}\PY{p}{(}\PY{n}{r\PYZus{}rows}\PY{p}{,} \PY{n}{r\PYZus{}cols}\PY{p}{,} \PY{p}{:}\PY{p}{)} \PY{p}{=} 1\PY{p}{;}
+														
+							\PY{n}{ydiff} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{diff} \PY{o}{.*} \PY{n}{double}\PY{p}{(}\PY{n}{y\PYZus{}mask}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							\PY{n}{bdiff} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{diff} \PY{o}{.*} \PY{n}{double}\PY{p}{(}\PY{n}{b\PYZus{}mask}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+							\PY{n}{rdiff} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{diff} \PY{o}{.*} \PY{n}{double}\PY{p}{(}\PY{n}{r\PYZus{}mask}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+						\PY{k}{else}
+							\PY{n}{ydiff} \PY{p}{=} \PY{n}{diff}\PY{p}{;}
+							\PY{n}{bdiff} \PY{p}{=} \PY{n}{diff}\PY{p}{;}
+							\PY{n}{rdiff} \PY{p}{=} \PY{n}{diff}\PY{p}{;}
+						\PY{k}{end}
+						
+						\PY{n}{kinit} \PY{p}{=} 1\PY{p}{;}
 
-            \PY{n}{Y} \PY{p}{=} \PY{n}{thresh\PYZus{}yellow}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{;}
-            \PY{n}{B} \PY{p}{=} \PY{n}{thresh\PYZus{}blue}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{;}
-            \PY{n}{R} \PY{p}{=} \PY{n}{thresh\PYZus{}red}\PY{p}{(}\PY{n}{diff}\PY{p}{)}\PY{p}{;}
+            \PY{n}{Y} \PY{p}{=} \PY{n}{thresh\PYZus{}yellow}\PY{p}{(}\PY{n}{ydiff}\PY{p}{)}\PY{p}{;}
+            \PY{n}{B} \PY{p}{=} \PY{n}{thresh\PYZus{}blue}\PY{p}{(}\PY{n}{bdiff}\PY{p}{)}\PY{p}{;}
+            \PY{n}{R} \PY{p}{=} \PY{n}{thresh\PYZus{}red}\PY{p}{(}\PY{n}{rdiff}\PY{p}{)}\PY{p}{;}
             
 
 \end{Verbatim}
@@ -70,8 +107,7 @@ matrix.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]            \PY{n}{cy} \PY{p}{=} \PY{n}{biggest\PYZus{}center}\PY{p}{(}\PY{n}{Y}\PY{p}{)}\PY{p}{;}
+            \PY{n}{cy} \PY{p}{=} \PY{n}{biggest\PYZus{}center}\PY{p}{(}\PY{n}{Y}\PY{p}{)}\PY{p}{;}
             \PY{n}{cb} \PY{p}{=} \PY{n}{biggest\PYZus{}center}\PY{p}{(}\PY{n}{B}\PY{p}{)}\PY{p}{;}
             \PY{n}{cr} \PY{p}{=} \PY{n}{biggest\PYZus{}center}\PY{p}{(}\PY{n}{R}\PY{p}{)}\PY{p}{;}
             \PY{n}{tracks}\PY{p}{(}\PY{n}{ii}\PY{p}{,} \PY{p}{:}\PY{p}{)} \PY{p}{=} \PY{p}{[}\PY{n}{cy}\PY{p}{,} \PY{n}{cb}\PY{p}{,} \PY{n}{cr}\PY{p}{]}\PY{p}{;}
@@ -81,6 +117,8 @@ matrix.
             \PY{n}{hold} \PY{n}{on}
             \PY{n}{plot}\PY{p}{(}\PY{n}{cy}\PY{p}{(}1\PY{p}{)}\PY{p}{,} \PY{n}{cy}\PY{p}{(}2\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{y*'}\PY{p}{,} \PY{n}{cb}\PY{p}{(}1\PY{p}{)}\PY{p}{,} \PY{n}{cb}\PY{p}{(}2\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{b*'}\PY{p}{,} \PY{n}{cr}\PY{p}{(}1\PY{p}{)}\PY{p}{,} \PY{n}{cr}\PY{p}{(}2\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{r*'}\PY{p}{)}\PY{p}{;}
             \PY{n}{drawnow}\PY{p}{;}
+						
+						
             \PY{n}{pause}\PY{p}{(}1 \PY{o}{-} \PY{n}{toc}\PY{p}{)}
             \PY{n}{perc} \PY{p}{=} \PY{n}{ii}\PY{o}{/}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{files}\PY{p}{,}1\PY{p}{)} \PY{o}{*} 2 \PY{o}{+} 4\PY{p}{)}\PY{p}{;}
             \PY{n}{waitbar}\PY{p}{(}\PY{n}{perc}\PY{p}{,}\PY{n}{wb}\PY{p}{,}\PY{n}{sprintf}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{\PYZpc{}d\PYZpc{}\PYZpc{} completed...'}\PY{p}{,}\PY{n+nb}{round}\PY{p}{(}\PY{n}{perc} \PY{o}{*} 100\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{;}
@@ -106,8 +144,7 @@ juggling.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{figure}\PY{p}{(}1\PY{p}{)}\PY{p}{;}
+    \PY{n}{figure}\PY{p}{(}1\PY{p}{)}\PY{p}{;}
     \PY{n}{imshow}\PY{p}{(}\PY{n}{imread}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{background.jpg'}\PY{p}{)}\PY{p}{)}
     \PY{n}{hold} \PY{n}{on}
     \PY{n}{plot}\PY{p}{(}\PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 1\PY{p}{)}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 2\PY{p}{)}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{y'}\PY{p}{,} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,} 3\PY{p}{)}\PY{p}{,} \PY{p}{.}\PY{p}{.}\PY{p}{.}
@@ -152,8 +189,7 @@ were tracked more then 10px off as well as the average error.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{ev} \PY{p}{=} \PY{n}{load}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{gt1.mat'}\PY{p}{)}\PY{p}{;}
+    \PY{n}{ev} \PY{p}{=} \PY{n}{load}\PY{p}{(}\PY{l+s}{'}\PY{l+s}{gt1.mat'}\PY{p}{)}\PY{p}{;}
     \PY{n}{gt} \PY{p}{=} \PY{n}{ev}\PY{p}{.}\PY{n}{gt1}\PY{o}{'}\PY{p}{;}
     
     \PY{n}{yellow\PYZus{}d} \PY{p}{=} \PY{n+nb}{sqrt}\PY{p}{(}\PY{n}{sum}\PY{p}{(}\PY{n}{gt}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{[}7\PY{p}{,}6\PY{p}{]}\PY{p}{)} \PY{o}{-} \PY{n}{tracks}\PY{p}{(}\PY{p}{:}\PY{p}{,}\PY{p}{[}1\PY{p}{,}2\PY{p}{]}\PY{p}{)}\PY{p}{,} 2\PY{p}{)} \PY{o}{.\PYZca{}} 2\PY{p}{)}\PY{p}{;}
@@ -191,8 +227,7 @@ real center, saving to disk those that are more then 10px off.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]    \PY{k}{for} \PY{n}{ii} \PY{p}{=} 1\PY{p}{:}\PY{n}{count}
+    \PY{k}{for} \PY{n}{ii} \PY{p}{=} 1\PY{p}{:}\PY{n}{count}
         \PY{n}{tic}\PY{p}{;}
         \PY{n}{Image} \PY{p}{=} \PY{n}{imread}\PY{p}{(}\PY{p}{[}\PY{l+s}{'}\PY{l+s}{juggle1/'}\PY{p}{,} \PY{n}{files}\PY{p}{(}\PY{n}{ii}\PY{p}{)}\PY{p}{.}\PY{n}{name}\PY{p}{]}\PY{p}{)}\PY{p}{;}
         \PY{n}{set}\PY{p}{(}\PY{n}{fg}\PY{p}{,} \PY{l+s}{'}\PY{l+s}{name'}\PY{p}{,} \PY{n}{files}\PY{p}{(}\PY{n}{ii}\PY{p}{)}\PY{p}{.}\PY{n}{name}\PY{p}{)}\PY{p}{;}

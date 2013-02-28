@@ -9,8 +9,7 @@ lightness invariant.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{function}\PY{+w}{ }[outimage] \PY{p}{=}\PY{+w}{ }\PY{n+nf}{normalized\PYZus{}rgb}\PY{p}{(}image\PY{p}{)}
 
 \end{Verbatim}
@@ -26,8 +25,7 @@ Select the individual channels
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]    \PY{n}{red} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{image}\PY{p}{(}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} 1\PY{p}{)}\PY{p}{)}\PY{p}{;}
+    \PY{n}{red} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{image}\PY{p}{(}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} 1\PY{p}{)}\PY{p}{)}\PY{p}{;}
     \PY{n}{green} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{image}\PY{p}{(}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} 2\PY{p}{)}\PY{p}{)}\PY{p}{;}
     \PY{n}{blue} \PY{p}{=} \PY{n}{double}\PY{p}{(}\PY{n}{image}\PY{p}{(}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} 3\PY{p}{)}\PY{p}{)}\PY{p}{;}
 
@@ -50,8 +48,7 @@ fill it.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]   \PY{n}{outimage} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{image}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+   \PY{n}{outimage} \PY{p}{=} \PY{n+nb}{zeros}\PY{p}{(}\PY{n+nb}{size}\PY{p}{(}\PY{n}{image}\PY{p}{)}\PY{p}{)}\PY{p}{;}
    \PY{n}{outimage}\PY{p}{(}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} 1\PY{p}{)} \PY{p}{=} \PY{n}{red} \PY{o}{./} \PY{n}{sumsquares}\PY{p}{;}
    \PY{n}{outimage}\PY{p}{(}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} 2\PY{p}{)} \PY{p}{=} \PY{n}{green} \PY{o}{./} \PY{n}{sumsquares}\PY{p}{;}
 
@@ -68,8 +65,7 @@ fill it.
 
 
 
-
-\begin{Verbatim}[commandchars=\\\{\}]   \PY{n}{outimage}\PY{p}{(}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} 3\PY{p}{)} \PY{p}{=} 0\PY{p}{;}
+   \PY{n}{outimage}\PY{p}{(}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} 3\PY{p}{)} \PY{p}{=} 0\PY{p}{;}
    
 
 \end{Verbatim}
@@ -89,7 +85,6 @@ outimage(:, :, 3) = blue ./ sum;
 
 
 
-\begin{Verbatim}[commandchars=\\\{\}]
 
 \PY{k}{end}
 
