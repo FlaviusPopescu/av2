@@ -8,12 +8,12 @@ function main(skip_detection)
     avgbg = avgall;
     
     fg = figure(1);
-    files = dir('juggle1/0*.jpg');
+    files = dir('juggle2/0*.jpg');
     tracks = zeros(size(files,1), 6);
     wb = waitbar(0, 'Initializing');
     count = size(files,1);
 		
-		thresh_reg = 40;
+		thresh_reg = 100;
     
 		kinit = 0;
 		
@@ -23,7 +23,7 @@ function main(skip_detection)
     else
         for ii = 1:count
             tic;
-            Image = imread(['juggle1/', files(ii).name]);
+            Image = imread(['juggle2/', files(ii).name]);
             % The algorithm processes each input image. It substracts the 
             % average background image, keeping the colours intact in
             % places where the difference is large enough. Then we
@@ -77,14 +77,19 @@ function main(skip_detection)
             cr = biggest_center(R);
             tracks(ii, :) = [cy, cb, cr];
             
-            % set(fg, 'name', files(ii).name);
-            % imshow(R + Y + B);
-            % hold on
-            % plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*', cr(1), cr(2), 'r*');
-            % drawnow;
+            set(fg, 'name', files(ii).name);
+            imshow(R + Y + B);
+						figure(2);
+						imshow(Image);
+            hold on
+            plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*', cr(1), cr(2), 'r*');
+						figure(1);
+            hold on
+            plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*', cr(1), cr(2), 'r*');
+            drawnow;
 						
 						
-            % pause(1 - toc)
+            pause(1 - toc)
             perc = ii/(size(files,1) * 2 + 4);
             waitbar(perc,wb,sprintf('%d%% completed...',round(perc * 100)));
         end 
@@ -96,30 +101,30 @@ function main(skip_detection)
     % Tracking is largely done in the previous step, here we visualise the
     % individual required images as well as an overall image of the
     % juggling.
-    % figure(1);
-    % imshow(imread('background.jpg'))
-    % hold on
-    % plot(tracks(:, 1), tracks(:, 2), 'y', tracks(:, 3), ...
-    %     tracks(:, 4), 'b', tracks(:, 5), tracks(:, 6), 'r')
-    % print('-dpng', 'report/tracking')
-    % 
-    % figure(1);
-    % imshow(imread('background.jpg'))
-    % hold on
-    % plot(tracks(:, 1), tracks(:, 2), 'y')
-    % print('-dpng', 'report/tracking-yellow')
-    % 
-    % figure(1);
-    % imshow(imread('background.jpg'))
-    % hold on
-    % plot(tracks(:, 3), tracks(:, 4), 'b')
-    % print('-dpng', 'report/tracking-blue')
-    % 
-    % figure(1);
-    % imshow(imread('background.jpg'))
-    % hold on
-    % plot(tracks(:, 5), tracks(:, 6), 'r')
-    % print('-dpng', 'report/tracking-red')
+    figure(1);
+    imshow(imread('background.jpg'))
+    hold on
+    plot(tracks(:, 1), tracks(:, 2), 'y', tracks(:, 3), ...
+        tracks(:, 4), 'b', tracks(:, 5), tracks(:, 6), 'r')
+    print('-dpng', 'report/tracking')
+    
+    figure(1);
+    imshow(imread('background.jpg'))
+    hold on
+    plot(tracks(:, 1), tracks(:, 2), 'y')
+    print('-dpng', 'report/tracking-yellow')
+    
+    figure(1);
+    imshow(imread('background.jpg'))
+    hold on
+    plot(tracks(:, 3), tracks(:, 4), 'b')
+    print('-dpng', 'report/tracking-blue')
+    
+    figure(1);
+    imshow(imread('background.jpg'))
+    hold on
+    plot(tracks(:, 5), tracks(:, 6), 'r')
+    print('-dpng', 'report/tracking-red')
        
     
     % Task 3: Evaluation
@@ -162,7 +167,7 @@ function main(skip_detection)
     % real center, saving to disk those that are more then 10px off.
     for ii = 1:count
         tic;
-        Image = imread(['juggle1/', files(ii).name]);
+        Image = imread(['juggle2/', files(ii).name]);
         set(fg, 'name', files(ii).name);
         imshow(Image);
         hold on
@@ -173,7 +178,7 @@ function main(skip_detection)
             gt(ii,5), gt(ii, 4), 'b*', ...
             gt(ii,3), gt(ii,2), 'r*');
         drawnow;
-        % pause(1 - toc)
+ 				pause(1 - toc)
         perc = (ii + size(files,1))/(size(files,1) * 2 + 4);
         
         [pathstr, name, ext] = fileparts(files(ii).name);
