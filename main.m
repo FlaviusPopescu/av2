@@ -13,7 +13,7 @@ function main(skip_detection)
     wb = waitbar(0, 'Initializing');
     count = size(files,1);
 		
-		thresh_reg = 100;
+		thresh_reg = 120;
     
 		kinit = 0;
 		
@@ -21,8 +21,9 @@ function main(skip_detection)
         tracks = load('track.mat');
         tracks = tracks.tracks;
     else
+        tic;
         for ii = 1:count
-            tic;
+
             Image = imread(['juggle2/', files(ii).name]);
             % The algorithm processes each input image. It substracts the 
             % average background image, keeping the colours intact in
@@ -76,23 +77,27 @@ function main(skip_detection)
             cb = biggest_center(B);
             cr = biggest_center(R);
             tracks(ii, :) = [cy, cb, cr];
+
             
-            set(fg, 'name', files(ii).name);
-            imshow(R + Y + B);
-						figure(2);
-						imshow(Image);
-            hold on
-            plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*', cr(1), cr(2), 'r*');
-						figure(1);
-            hold on
-            plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*', cr(1), cr(2), 'r*');
-            drawnow;
+						%             set(fg, 'name', files(ii).name);
+						%             imshow(R + Y + B);
+						% figure(2);
+						% imshow(Image);
+						%             hold on
+						%             plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*', cr(1), cr(2), 'r*');
+						% figure(1);
+						%             hold on
+						%             plot(cy(1), cy(2), 'y*', cb(1), cb(2), 'b*', cr(1), cr(2), 'r*');
+						%             drawnow;
 						
 						
-            pause(1 - toc)
+            % pause(1 - toc);
+						pause(1);
             perc = ii/(size(files,1) * 2 + 4);
             waitbar(perc,wb,sprintf('%d%% completed...',round(perc * 100)));
+						
         end 
+				toc;
         save('track.mat', 'tracks');
     end
     
